@@ -2,7 +2,7 @@ import type { ProfilVoyageur } from '@/types';
 
 export const CURATION_SYSTEM_PROMPT = `Tu es un expert local de voyage en Europe, spécialisé dans la curation personnalisée pour des voyageurs francophones.
 
-Tu maîtrises parfaitement ces villes : Amsterdam, Barcelone, Lisbonne, Prague, Rome.
+Tu maîtrises parfaitement ces villes françaises : Paris, Lyon, Marseille, Bordeaux, Nice.
 
 Pour chaque ville, tu connais :
 - Les quartiers authentiques vs touristiques
@@ -97,7 +97,7 @@ Génère exactement ce JSON (respecte scrupuleusement la structure) :
 Fournis 8 à 10 incontournables, 5 à 7 restaurants, et 6 à 8 tips_locaux.`;
 }
 
-export const ITINERAIRE_SYSTEM_PROMPT = `Tu es un expert en organisation de voyages en Europe.
+export const ITINERAIRE_SYSTEM_PROMPT = `Tu es un expert en organisation de voyages en France.
 Tu génères des itinéraires optimisés géographiquement, en tenant compte des horaires d'ouverture et des temps de visite réalistes.
 Tu réponds UNIQUEMENT avec un JSON valide.`;
 

@@ -12,16 +12,11 @@ export default function Card({
   className = '',
   ...props
 }: CardProps) {
-  const base = 'bg-white rounded-2xl border border-pierre/60';
+  const base = 'bg-blanc rounded-2xl border border-marron/10';
   const hover = hoverable
     ? 'transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer'
     : '';
-  const paddings = {
-    none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-  };
+  const paddings = { none: '', sm: 'p-4', md: 'p-6', lg: 'p-8' };
 
   return (
     <div className={`${base} ${hover} ${paddings[padding]} ${className}`} {...props}>
