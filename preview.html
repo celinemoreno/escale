@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escale — Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fond: '#FAF8F5',
+            encre: { DEFAULT: '#1C1917', muted: '#78716C' },
+            accent: { DEFAULT: '#D9541E', light: '#FEF0EA', hover: '#B8441A' },
+            pierre: { DEFAULT: '#E7E0D8', light: '#F5F0EC' },
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #FAF8F5; color: #1C1917; -webkit-font-smoothing: antialiased; }
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .question-slide { animation: slideIn 0.3s cubic-bezier(.25,.46,.45,.94); }
+    @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .option-card { transition: all 0.15s ease; cursor: pointer; }
+    .option-card:hover { border-color: #1C1917; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(-1px); }
+    .option-card.selected { background: #1C1917; color: #FAF8F5; border-color: #1C1917; }
+    .option-card.selected .opt-label { color: #FAF8F5; }
+    .option-card.selected .opt-desc { color: rgba(250,248,245,0.7); }
+    ::selection { background: #FEF0EA; color: #D9541E; }
+    ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: #E7E0D8; border-radius: 3px; }
+    .result-section { animation: fadeUp 0.4s ease; }
+    @keyframes fadeUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .heart-btn { transition: all 0.2s; }
+    .heart-btn.saved { background: #D9541E; color: white; transform: scale(1.1); }
+    .tip-card:nth-child(odd) { animation-delay: 0.05s; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<!-- ========== PAGE : LANDING ========== -->
+<div id="page-landing" class="page active">
+  <nav class="flex items-center justify-between px-6 sm:px-10 py-5 max-w-6xl mx-auto">
+    <span class="font-display text-2xl text-encre">Escale</span>
+    <div class="flex items-center gap-4">
+      <span class="text-sm text-encre-muted hidden sm:block cursor-pointer hover:text-encre transition-colors">Comment ça marche</span>
+      <button class="h-9 px-4 rounded-full border border-pierre text-sm text-encre hover:bg-pierre-light transition-colors">Connexion</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-6 pt-14 pb-20 text-center">
+    <div class="inline-flex items-center gap-2 rounded-full bg-accent-light px-4 py-1.5 text-xs text-accent font-medium mb-8">
+      <span>✦</span>
+      <span>5 destinations européennes disponibles</span>
+    </div>
+
+    <h1 class="font-display text-5xl sm:text-6xl text-encre leading-[1.08] mb-5 max-w-2xl mx-auto">
+      Votre prochain week-end,
+      <em class="text-accent not-italic"> sans les heures</em>
+      de recherche.
+    </h1>
+
+    <p class="text-encre-muted text-lg max-w-lg mx-auto mb-10 leading-relaxed">
+      Dites-nous où vous allez et votre profil. On génère votre starter&nbsp;pack voyage en 30 secondes.
+    </p>
+
+    <!-- Input destination -->
+    <div class="max-w-md mx-auto mb-6">
+      <div class="relative">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg pointer-events-none">✈️</span>
+        <input
+          id="dest-input"
+          type="text"
+          placeholder="Amsterdam, Rome, Barcelone…"
+          class="w-full h-14 pl-12 pr-36 rounded-full border-2 border-pierre bg-white text-encre placeholder:text-encre-muted/60 text-base focus:outline-none focus:border-encre transition-colors"
+          onkeydown="if(event.key==='Enter') lancerQuestionnaire()"
+        />
+        <button
+          onclick="lancerQuestionnaire()"
+          class="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-5 rounded-full bg-encre text-fond text-sm font-medium hover:opacity-85 transition-opacity active:scale-95"
+        >
+          Préparer →
+        </button>
+      </div>
+      <p id="dest-error" class="mt-2 text-sm text-red-500 text-left pl-4 hidden"></p>
+    </div>
+
+    <!-- Pills villes -->
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <button onclick="choisirVille('amsterdam')" class="flex items-center gap-2 rounded-full border border-pierre bg-white px-4 py-2 text-sm text-encre hover:border-encre hover:shadow-sm transition-all">🚲 Amsterdam</button>
+      <button onclick="choisirVille('barcelone')" class="flex items-center gap-2 rounded-full border border-pierre bg-white px-4 py-2 text-sm text-encre hover:border-encre hover:shadow-sm transition-all">🌞 Barcelone</button>
+      <button onclick="choisirVille('lisbonne')" class="flex items-center gap-2 rounded-full border border-pierre bg-white px-4 py-2 text-sm text-encre hover:border-encre hover:shadow-sm transition-all">🚋 Lisbonne</button>
+      <button onclick="choisirVille('prague')" class="flex items-center gap-2 rounded-full border border-pierre bg-white px-4 py-2 text-sm text-encre hover:border-encre hover:shadow-sm transition-all">🏰 Prague</button>
+      <button onclick="choisirVille('rome')" class="flex items-center gap-2 rounded-full border border-pierre bg-white px-4 py-2 text-sm text-encre hover:border-encre hover:shadow-sm transition-all">🏛️ Rome</button>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-6"><div class="h-px bg-pierre"></div></div>
+
+  <!-- Comment ça marche -->
+  <section class="max-w-5xl mx-auto px-6 py-20">
+    <div class="text-center mb-14">
+      <h2 class="font-display text-3xl sm:text-4xl text-encre mb-2">Comment ça marche</h2>
+      <p class="text-encre-muted text-sm">De zéro à votre itinéraire en 3 étapes.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div class="group">
+        <div class="font-display text-5xl text-pierre mb-3 group-hover:text-accent transition-colors duration-300">01</div>
+        <h3 class="font-display text-xl text-encre mb-2">Renseignez votre profil</h3>
+        <p class="text-sm text-encre-muted leading-relaxed">6 questions, 2 minutes. Style, budget, durée, contraintes.</p>
+      </div>
+      <div class="group">
+        <div class="font-display text-5xl text-pierre mb-3 group-hover:text-accent transition-colors duration-300">02</div>
+        <h3 class="font-display text-xl text-encre mb-2">Claude analyse & curation</h3>
+        <p class="text-sm text-encre-muted leading-relaxed">L'IA sélectionne les lieux vraiment adaptés à votre profil. Pas des listes génériques.</p>
+      </div>
+      <div class="group">
+        <div class="font-display text-5xl text-pierre mb-3 group-hover:text-accent transition-colors duration-300">03</div>
+        <h3 class="font-display text-xl text-encre mb-2">Votre starter pack est prêt</h3>
+        <p class="text-sm text-encre-muted leading-relaxed">Incontournables, restaurants, tips locaux, itinéraire optimisé.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Villes -->
+  <section class="bg-pierre-light py-20">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="text-center mb-10">
+        <h2 class="font-display text-3xl text-encre mb-2">Destinations disponibles</h2>
+        <p class="text-encre-muted text-sm">5 villes européennes, contenu expert curé par IA.</p>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <button onclick="choisirVille('amsterdam')" class="group bg-white rounded-2xl border border-pierre/60 p-5 text-center hover:border-encre hover:shadow-md transition-all active:scale-95">
+          <span class="text-4xl block mb-2">🚲</span>
+          <div class="font-display text-base text-encre mb-1">Amsterdam</div>
+          <div class="text-xs text-encre-muted">Canaux & vélos</div>
+          <div class="mt-3 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">Préparer →</div>
+        </button>
+        <button onclick="choisirVille('barcelone')" class="group bg-white rounded-2xl border border-pierre/60 p-5 text-center hover:border-encre hover:shadow-md transition-all active:scale-95">
+          <span class="text-4xl block mb-2">🌞</span>
+          <div class="font-display text-base text-encre mb-1">Barcelone</div>
+          <div class="text-xs text-encre-muted">Architecture & plages</div>
+          <div class="mt-3 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">Préparer →</div>
+        </button>
+        <button onclick="choisirVille('lisbonne')" class="group bg-white rounded-2xl border border-pierre/60 p-5 text-center hover:border-encre hover:shadow-md transition-all active:scale-95">
+          <span class="text-4xl block mb-2">🚋</span>
+          <div class="font-display text-base text-encre mb-1">Lisbonne</div>
+          <div class="text-xs text-encre-muted">Tramways & azulejos</div>
+          <div class="mt-3 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">Préparer →</div>
+        </button>
+        <button onclick="choisirVille('prague')" class="group bg-white rounded-2xl border border-pierre/60 p-5 text-center hover:border-encre hover:shadow-md transition-all active:scale-95">
+          <span class="text-4xl block mb-2">🏰</span>
+          <div class="font-display text-base text-encre mb-1">Prague</div>
+          <div class="text-xs text-encre-muted">Architecture & bière</div>
+          <div class="mt-3 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">Préparer →</div>
+        </button>
+        <button onclick="choisirVille('rome')" class="group bg-white rounded-2xl border border-pierre/60 p-5 text-center hover:border-encre hover:shadow-md transition-all active:scale-95">
+          <span class="text-4xl block mb-2">🏛️</span>
+          <div class="font-display text-base text-encre mb-1">Rome</div>
+          <div class="text-xs text-encre-muted">Histoire & cuisine</div>
+          <div class="mt-3 text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">Préparer →</div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-4xl mx-auto px-6 py-20 text-center">
+    <h2 class="font-display text-4xl sm:text-5xl text-encre mb-4 max-w-lg mx-auto leading-tight">Fini les 3h de recherche avant de partir.</h2>
+    <p class="text-encre-muted mb-8 max-w-sm mx-auto">Commencez maintenant. Gratuit, sans inscription.</p>
+    <button onclick="choisirVille('amsterdam')" class="h-14 px-8 rounded-full bg-accent text-white text-base font-medium hover:bg-accent-hover transition-colors active:scale-95">
+      Préparer mon voyage →
+    </button>
+  </section>
+
+  <footer class="border-t border-pierre px-6 py-8">
+    <div class="max-w-5xl mx-auto flex items-center justify-between text-xs text-encre-muted">
+      <span class="font-display text-base text-encre">Escale</span>
+      <span>Preview — Amsterdam · Barcelone · Lisbonne · Prague · Rome</span>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ========== PAGE : QUESTIONNAIRE ========== -->
+<div id="page-questionnaire" class="page min-h-screen flex flex-col bg-fond">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-5 border-b border-pierre/40">
+    <button onclick="showPage('landing')" class="font-display text-xl text-encre hover:text-accent transition-colors">Escale</button>
+    <span id="q-header-info" class="text-sm text-encre-muted"></span>
+  </header>
+
+  <!-- Progress bar -->
+  <div class="h-0.5 bg-pierre">
+    <div id="progress-bar" class="h-full bg-accent transition-all duration-500" style="width:0%"></div>
+  </div>
+
+  <!-- Question zone -->
+  <div class="flex-1 flex flex-col items-center justify-center py-12 px-4">
+    <div id="question-container" class="w-full max-w-2xl"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="px-6 pb-8 max-w-2xl mx-auto w-full flex items-center justify-between">
+    <button id="btn-precedent" onclick="precedent()" class="h-11 px-6 rounded-full border border-pierre text-encre text-sm font-medium hover:bg-pierre-light transition-colors invisible">← Précédent</button>
+
+    <div id="dots-container" class="flex gap-1.5"></div>
+
+    <button id="btn-suivant" onclick="suivant()" class="h-11 px-6 rounded-full bg-encre text-fond text-sm font-medium hover:opacity-85 transition-opacity disabled:opacity-40 hidden">
+      Suivant →
+    </button>
+  </div>
+</div>
+
+
+<!-- ========== PAGE : CHARGEMENT ========== -->
+<div id="page-loading" class="page min-h-screen flex flex-col items-center justify-center text-center bg-fond px-6">
+  <div class="mb-8">
+    <div class="relative h-16 w-16 mx-auto mb-6">
+      <div class="absolute inset-0 rounded-full border-2 border-pierre animate-spin border-t-accent"></div>
+      <span class="absolute inset-0 flex items-center justify-center text-2xl">✈️</span>
+    </div>
+    <h2 class="font-display text-2xl text-encre mb-2">Escale prépare votre voyage…</h2>
+    <p class="text-encre-muted text-sm max-w-xs mx-auto" id="loading-msg">Claude analyse votre profil et sélectionne les meilleures adresses</p>
+  </div>
+  <div class="flex gap-1.5 mt-4">
+    <div class="h-1.5 w-1.5 rounded-full bg-accent animate-bounce" style="animation-delay:0s"></div>
+    <div class="h-1.5 w-1.5 rounded-full bg-accent animate-bounce" style="animation-delay:0.15s"></div>
+    <div class="h-1.5 w-1.5 rounded-full bg-accent animate-bounce" style="animation-delay:0.3s"></div>
+  </div>
+
+  <p class="mt-10 text-xs text-encre-muted/50">(Mode preview — résultats fictifs)</p>
+</div>
+
+
+<!-- ========== PAGE : RÉSULTATS ========== -->
+<div id="page-resultats" class="page bg-fond min-h-screen">
+
+  <!-- Header sticky -->
+  <header class="sticky top-0 z-30 bg-fond/95 backdrop-blur border-b border-pierre/40">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <button onclick="showPage('landing')" class="font-display text-xl text-encre hover:text-accent transition-colors">Escale</button>
+        <span class="text-encre-muted">·</span>
+        <span id="res-ville-label" class="font-display text-xl text-encre"></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="showPage('questionnaire'); reinitQuestionnaire()" class="text-sm text-encre-muted hover:text-encre transition-colors hidden sm:block">Modifier mon profil</button>
+        <button onclick="exporterMaps()" class="h-9 px-4 rounded-full bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors">📍 Exporter Maps</button>
+      </div>
+    </div>
+    <nav class="max-w-6xl mx-auto px-6 flex gap-1 pb-3 overflow-x-auto">
+      <button onclick="scrollToSection('incontournables')" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all bg-encre text-fond">📍 Incontournables</button>
+      <button onclick="scrollToSection('restaurants')" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-encre-muted hover:text-encre hover:bg-pierre-light">🍽️ Restaurants</button>
+      <button onclick="scrollToSection('tips')" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-encre-muted hover:text-encre hover:bg-pierre-light">💡 Tips locaux</button>
+      <button onclick="scrollToSection('itineraire')" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-encre-muted hover:text-encre hover:bg-pierre-light">🗓️ Itinéraire</button>
+    </nav>
+  </header>
+
+  <!-- Hero ville -->
+  <div id="res-hero" class="relative h-64 sm:h-72 overflow-hidden flex items-end">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
+    <div class="relative z-20 px-8 pb-8 max-w-6xl mx-auto w-full">
+      <p class="text-white/70 text-sm mb-1" id="res-sauvegardes-count">0 lieu sauvegardé</p>
+      <h1 class="font-display text-4xl sm:text-5xl text-white" id="res-titre"></h1>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
+
+    <!-- Incontournables -->
+    <section id="incontournables" class="result-section">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-1"><span>📍</span><h2 class="font-display text-2xl text-encre">Les incontournables</h2></div>
+        <p class="text-sm text-encre-muted pl-6" id="nb-lieux"></p>
+      </div>
+      <div id="lieux-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- Restaurants -->
+    <section id="restaurants" class="result-section">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-1"><span>🍽️</span><h2 class="font-display text-2xl text-encre">Où manger</h2></div>
+        <p class="text-sm text-encre-muted pl-6" id="nb-restos"></p>
+      </div>
+      <div id="restos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- Tips locaux -->
+    <section id="tips" class="result-section">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-1"><span>💡</span><h2 class="font-display text-2xl text-encre">Tips locaux</h2></div>
+        <p class="text-sm text-encre-muted pl-6">Ce que les guides ne vous disent pas</p>
+      </div>
+      <div id="tips-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- Itinéraire -->
+    <section id="itineraire" class="result-section">
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-1"><span>🗓️</span><h2 class="font-display text-2xl text-encre">Itinéraire suggéré</h2></div>
+        <p class="text-sm text-encre-muted pl-6">Optimisé géographiquement</p>
+      </div>
+      <div id="itineraire-container"></div>
+    </section>
+
+    <!-- Footer actions -->
+    <div class="border-t border-pierre pt-12 flex flex-col sm:flex-row items-center gap-4 justify-between">
+      <p class="text-sm text-encre-muted">
+        <span class="text-accent font-medium" id="footer-sauvegardes">0</span> lieu(x) dans vos favoris
+      </p>
+      <div class="flex gap-3">
+        <button onclick="exporterMaps()" class="h-11 px-6 rounded-full border border-pierre text-encre text-sm font-medium hover:bg-pierre-light transition-colors">📍 Exporter vers Maps</button>
+        <button onclick="showPage('questionnaire'); reinitQuestionnaire()" class="h-11 px-6 rounded-full bg-encre text-fond text-sm font-medium hover:opacity-85 transition-opacity">Recommencer</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<script>
+// ——— DONNÉES ———————————————————————————————————————————————
+
+const QUESTIONS = [
+  {
+    id: 'typeVoyage', question: 'Vous partez comment ?',
+    options: [
+      { value: 'solo', label: 'Solo', icon: '🧳', desc: 'Liberté totale' },
+      { value: 'couple', label: 'En couple', icon: '❤️', desc: 'En amoureux' },
+      { value: 'amis', label: 'Entre amis', icon: '🥂', desc: 'Bonne ambiance' },
+      { value: 'famille', label: 'En famille', icon: '👨‍👩‍👧', desc: 'Avec enfants' },
+    ]
+  },
+  {
+    id: 'duree', question: 'Combien de temps ?',
+    options: [
+      { value: '1jour', label: '1 journée', icon: '☀️', desc: 'Sprint découverte' },
+      { value: 'weekend', label: 'Week-end', icon: '📅', desc: '2 à 3 jours' },
+      { value: 'semaine', label: 'Une semaine', icon: '🗓️', desc: '5 à 7 jours' },
+    ]
+  },
+  {
+    id: 'heureArrivee', question: "Vous arrivez quand ?", subtitle: 'Le premier jour du séjour',
+    options: [
+      { value: 'matin', label: 'Le matin', icon: '🌅', desc: 'Avant 12h' },
+      { value: 'apres-midi', label: "L'après-midi", icon: '🌤️', desc: '12h — 18h' },
+      { value: 'soir', label: 'Le soir', icon: '🌆', desc: 'Après 18h' },
+    ]
+  },
+  {
+    id: 'style', question: 'Quel est votre style ?',
+    options: [
+      { value: 'culturel', label: 'Culturel', icon: '🏛️', desc: 'Musées & architecture' },
+      { value: 'gastronomique', label: 'Gastro', icon: '🍽️', desc: 'Restaurants & marchés' },
+      { value: 'nature', label: 'Nature', icon: '🌿', desc: 'Parcs & balades' },
+      { value: 'festif', label: 'Festif', icon: '🎉', desc: 'Bars & vie nocturne' },
+    ]
+  },
+  {
+    id: 'budget', question: 'Votre budget par jour ?',
+    options: [
+      { value: 'petit', label: 'Petit budget', icon: '💶', desc: 'Moins de 50€' },
+      { value: 'moyen', label: 'Moyen', icon: '💳', desc: '50 à 150€' },
+      { value: 'confortable', label: 'Confortable', icon: '✨', desc: 'Plus de 150€' },
+    ]
+  },
+  {
+    id: 'contraintes', question: 'Des contraintes ?', subtitle: 'Sélectionnez tout ce qui vous concerne', multi: true,
+    options: [
+      { value: 'enfants', label: 'Avec enfants', icon: '🧒', desc: 'Kids-friendly' },
+      { value: 'mobilite', label: 'Mobilité réduite', icon: '♿', desc: 'Accessibilité' },
+      { value: 'vegetarien', label: 'Végétarien', icon: '🥗', desc: 'Options végé' },
+      { value: 'aucune', label: 'Aucune', icon: '✓', desc: 'Tout me convient' },
+    ]
+  }
+];
+
+const VILLES_LABELS = { amsterdam: 'Amsterdam', barcelone: 'Barcelone', lisbonne: 'Lisbonne', prague: 'Prague', rome: 'Rome' };
+
+const VILLES_MAPPING = {
+  amsterdam: 'amsterdam', barcelona: 'barcelone', barcelone: 'barcelone',
+  lisbonne: 'lisbonne', lisbon: 'lisbonne', lisboa: 'lisbonne',
+  prague: 'prague', praha: 'prague', rome: 'rome', roma: 'rome'
+};
+
+const VILLE_GRADIENTS = {
+  amsterdam: 'linear-gradient(135deg,#667eea,#764ba2 50%,#D9541E)',
+  barcelone: 'linear-gradient(135deg,#F093FB,#F5576C 50%,#FDB99B)',
+  lisbonne: 'linear-gradient(135deg,#4FACFE,#00F2FE 50%,#43E97B)',
+  prague: 'linear-gradient(135deg,#FA709A,#FEE140)',
+  rome: 'linear-gradient(135deg,#F6D365,#FDA085 50%,#D9541E)',
+};
+
+// Données fictives pour preview
+const MOCK_DATA = {
+  amsterdam: {
+    incontournables: [
+      { nom: 'Rijksmuseum', desc: 'Le temple de la peinture flamande du XVIIe siècle.', pourquoi: 'Incontournable pour tout voyageur culturel — Rembrandt et Vermeer à leur apogée.', duree: '2h30', prix: '22€', horaires: 'Tlj 9h–17h', tip: 'Arrivez à l\'ouverture un mardi — 40% moins de monde que le weekend.' },
+      { nom: 'Jordaan', desc: 'Le quartier le plus authentique d\'Amsterdam, loin des touristes.', pourquoi: 'Des galeries d\'art, des cafés bruns typiques et des marchés locaux — parfait pour votre style.', duree: 'Demi-journée', prix: 'Gratuit', horaires: 'Accessible 24h/24', tip: 'Le marché du samedi sur le Noordermarkt est réservé aux bio — arrivez avant 10h.' },
+      { nom: 'Anne Frank Huis', desc: 'La maison cachée qui a changé l\'histoire du monde.', pourquoi: 'Une expérience historique et émotionnelle unique, réservation indispensable.', duree: '1h30', prix: '16€', horaires: '9h–22h (réservation oblig.)', tip: 'Réservez minimum 2 semaines à l\'avance. Créneaux 9h ou 20h = moins bondés.' },
+      { nom: 'Vondelpark', desc: 'Le poumon vert d\'Amsterdam, vibrant en été.', pourquoi: 'Idéal pour décompresser entre deux sites, observer les locaux, pique-niquer.', duree: '1h', prix: 'Gratuit', horaires: 'Tlj lever-coucher soleil', tip: 'Le café "t Blauwe Theehuis" au centre du parc sert le meilleur café du coin.' },
+      { nom: 'Marché Albert Cuyp', desc: 'Le plus grand marché en plein air des Pays-Bas, ouvert depuis 1905.', pourquoi: 'Goûter les stroopwafels chauds et les harengs frais comme un vrai Amsterdamois.', duree: '1h', prix: 'Gratuit', horaires: 'Lun–Sam 9h–17h', tip: 'Allez chez le marchand de fromages au milieu — il laisse goûter avant d\'acheter.' },
+      { nom: 'Moco Museum', desc: 'Banksy, Warhol et l\'art contemporain dans une villa du XIXe.', pourquoi: 'Pour un rapport qualité/expérience imbattable — plus intime que le Stedelijk.', duree: '1h30', prix: '21€', horaires: '9h–19h (21h vendredi)', tip: 'Bookez en ligne : file d\'attente divisée par 3 et 1€ moins cher.' },
+    ],
+    restaurants: [
+      { nom: 'De Kas', cuisine: 'Cuisine de jardin', budget: '55€/pers', ambiance: 'Serre monumentale des années 1920, légumes cultivés sur place.', adresse: 'Kamerlingh Onneslaan 3, Oost', tip: 'Menu unique qui change chaque semaine. Réservez obligatoirement — il y a 1 mois d\'attente en été.' },
+      { nom: 'Brouwerij 't IJ', cuisine: 'Bières artisanales & planches', budget: '15€/pers', ambiance: 'Brasserie dans un vrai moulin à vent — terrasse ensoleillée.', adresse: 'Funenkade 7', tip: 'La Natte (brune) est la meilleure. Visite de la brasserie à 15h30 pour 3€.' },
+      { nom: 'Bakers & Roasters', cuisine: 'Brunch néo-zélandais', budget: '18€/pers', ambiance: 'Café lumineux et cool dans le Jordaan — file d\'attente mais ça vaut le coup.', adresse: 'Haarlemmerdijk 203', tip: 'Arrivez à 8h15 le weekend pour éviter l\'attente. Le banana bread french toast est légendaire.' },
+      { nom: 'Rijsel', cuisine: 'Bistro flamand', budget: '30€/pers', ambiance: 'Ancienne école reconvertie, grande salle chaleureuse, cuisine de grand-mère.', adresse: 'Marcusstraat 52b, Oost', tip: 'Le poulet rôti du jeudi est mythique parmi les locaux. Cash seulement.' },
+    ],
+    tips: [
+      '🚲 Louez un vélo dès l\'arrivée chez MacBike (gare centrale) — c\'est le seul vrai moyen de voir Amsterdam comme un local.',
+      '🚌 L\'I Amsterdam City Card vaut vraiment le coup si vous visitez 3 musées ou plus.',
+      '💡 Les "brown cafés" (bruine kroeg) sont les vrais bars locaux — évitez ceux qui ont des néons de cocktails.',
+      '🕐 Les musées populaires affichent complet 2-3 semaines à l\'avance le weekend. Réservez avant de partir.',
+      '💶 Les distributeurs de banque indépendants (pas Euronet) prennent des commissions indécentes — utilisez ceux de la Rabobank ou ING.',
+      '🌧️ La pluie dure rarement plus de 20 minutes — ayez un imperméable léger et ne changez pas vos plans.',
+      '🍟 Les frittes néerlandaises se mangent avec de la "oorlog sauce" (mayo + satay + oignons) — pas juste du ketchup.',
+    ],
+    itineraire: [
+      {
+        jour: 1, titre: 'Arrivée & découverte du Jordaan',
+        etapes: [
+          { heure: '14h00', lieu: 'Check-in hôtel', duree: '30 min', note: 'Posez vos bagages et rechargez-vous.' },
+          { heure: '15h00', lieu: 'Jordaan', duree: '2h', note: 'Flânez dans les rues — Prinsengracht, Brouwersgracht. Pas de plan, c\'est le but.' },
+          { heure: '17h30', lieu: 'Brouwerij \'t IJ', duree: '1h30', note: 'Bière artisanale au pied du moulin. La Natte est indispensable.' },
+          { heure: '19h30', lieu: 'Dîner à Rijsel', duree: '2h', note: 'Réservation impérative. Comptez 30€/pers, ambiance authentique.' },
+        ]
+      },
+      {
+        jour: 2, titre: 'Grands musées & marché',
+        etapes: [
+          { heure: '09h00', lieu: 'Rijksmuseum', duree: '2h30', note: 'Arrivez à l\'ouverture — billet réservé en ligne obligatoire.' },
+          { heure: '11h45', lieu: 'Marché Albert Cuyp', duree: '1h', note: 'Déjeuner sur place : harengs, stroopwafels, fromages.' },
+          { heure: '13h30', lieu: 'Moco Museum', duree: '1h30', note: 'Banksy et art contemporain. Bien plus intime que le Van Gogh Museum.' },
+          { heure: '16h00', lieu: 'Vondelpark', duree: '1h', note: 'Pause au café Blauwe Theehuis avant le dîner.' },
+          { heure: '19h00', lieu: 'Dîner De Kas', duree: '2h', note: 'Réservation des semaines à l\'avance. La meilleure table d\'Amsterdam.' },
+        ]
+      },
+    ]
+  }
+};
+
+// ——— ÉTAT ——————————————————————————————————————————————————
+
+let state = {
+  ville: null,
+  currentQ: 0,
+  reponses: {},
+  contraintes: [],
+  sauvegardes: new Set(),
+};
+
+// ——— NAVIGATION ———————————————————————————————————————————
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ——— LANDING ——————————————————————————————————————————————
+
+function choisirVille(slug) {
+  state.ville = slug;
+  reinitQuestionnaire();
+  showPage('questionnaire');
+}
+
+function lancerQuestionnaire() {
+  const input = document.getElementById('dest-input').value.trim().toLowerCase();
+  const slug = VILLES_MAPPING[input];
+  const errEl = document.getElementById('dest-error');
+  if (!slug) {
+    errEl.textContent = 'Villes disponibles : Amsterdam, Barcelone, Lisbonne, Prague, Rome';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  errEl.classList.add('hidden');
+  choisirVille(slug);
+}
+
+// ——— QUESTIONNAIRE ————————————————————————————————————————
+
+function reinitQuestionnaire() {
+  state.currentQ = 0;
+  state.reponses = {};
+  state.contraintes = [];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[state.currentQ];
+  const total = QUESTIONS.length;
+  const progression = ((state.currentQ + 1) / total) * 100;
+
+  document.getElementById('progress-bar').style.width = progression + '%';
+  document.getElementById('q-header-info').textContent =
+    (VILLES_LABELS[state.ville] || state.ville) + ' · ' + (state.currentQ + 1) + '/' + total;
+
+  // Dots
+  const dots = document.getElementById('dots-container');
+  dots.innerHTML = QUESTIONS.map((_, i) => `
+    <div class="h-1.5 rounded-full transition-all duration-300 ${
+      i === state.currentQ ? 'w-6 bg-encre' :
+      i < state.currentQ ? 'w-1.5 bg-accent' : 'w-1.5 bg-pierre'
+    }"></div>
+  `).join('');
+
+  // Bouton précédent
+  const btnPrec = document.getElementById('btn-precedent');
+  btnPrec.classList.toggle('invisible', state.currentQ === 0);
+
+  // Bouton suivant (seulement pour multi-select ou dernière question)
+  const btnSuiv = document.getElementById('btn-suivant');
+  if (q.multi) {
+    btnSuiv.classList.remove('hidden');
+    btnSuiv.textContent = 'Découvrir →';
+    updateSuivantState();
+  } else if (state.currentQ === total - 1) {
+    btnSuiv.classList.remove('hidden');
+    btnSuiv.textContent = 'Découvrir →';
+  } else {
+    btnSuiv.classList.add('hidden');
+  }
+
+  // Contenu de la question
+  const container = document.getElementById('question-container');
+  const gridCols = q.options.length === 3 ? 'grid-cols-3' : 'grid-cols-2';
+  const currentVal = q.multi ? state.contraintes : (state.reponses[q.id] || null);
+
+  container.innerHTML = `
+    <div class="question-slide">
+      <div class="mb-10 text-center">
+        <h2 class="font-display text-3xl sm:text-4xl text-encre mb-3 leading-tight">${q.question}</h2>
+        ${q.subtitle ? `<p class="text-encre-muted text-base">${q.subtitle}</p>` : ''}
+      </div>
+      <div class="grid ${gridCols} gap-3">
+        ${q.options.map(opt => `
+          <button
+            onclick="selectOption('${q.id}', '${opt.value}', ${!!q.multi})"
+            class="option-card flex flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center focus:outline-none ${
+              q.multi
+                ? (state.contraintes.includes(opt.value) ? 'selected' : 'border-pierre bg-white')
+                : (currentVal === opt.value ? 'selected' : 'border-pierre bg-white')
+            }"
+          >
+            <span class="text-3xl leading-none">${opt.icon}</span>
+            <div>
+              <div class="opt-label font-medium text-base leading-tight text-encre">${opt.label}</div>
+              <div class="opt-desc mt-1 text-xs leading-snug text-encre-muted">${opt.desc}</div>
+            </div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(questionId, value, isMulti) {
+  if (isMulti) {
+    if (value === 'aucune') {
+      state.contraintes = ['aucune'];
+    } else {
+      state.contraintes = state.contraintes.filter(v => v !== 'aucune');
+      const idx = state.contraintes.indexOf(value);
+      if (idx >= 0) state.contraintes.splice(idx, 1);
+      else state.contraintes.push(value);
+    }
+    updateSuivantState();
+    renderQuestion();
+    return;
+  }
+
+  state.reponses[questionId] = value;
+  renderQuestion();
+
+  // Auto-avance
+  const isLast = state.currentQ === QUESTIONS.length - 1;
+  if (!isLast) {
+    setTimeout(() => {
+      state.currentQ++;
+      renderQuestion();
+    }, 220);
+  }
+}
+
+function updateSuivantState() {
+  const btnSuiv = document.getElementById('btn-suivant');
+  const q = QUESTIONS[state.currentQ];
+  const hasValue = q.multi ? state.contraintes.length > 0 : !!state.reponses[q.id];
+  btnSuiv.disabled = !hasValue;
+  btnSuiv.style.opacity = hasValue ? '1' : '0.4';
+  btnSuiv.style.pointerEvents = hasValue ? 'auto' : 'none';
+}
+
+function precedent() {
+  if (state.currentQ > 0) {
+    state.currentQ--;
+    renderQuestion();
+  }
+}
+
+function suivant() {
+  const isLast = state.currentQ === QUESTIONS.length - 1;
+  if (isLast) {
+    lancerCuration();
+  } else {
+    state.currentQ++;
+    renderQuestion();
+  }
+}
+
+// ——— CHARGEMENT ————————————————————————————————————————————
+
+function lancerCuration() {
+  showPage('loading');
+  const msgs = [
+    'Claude analyse votre profil…',
+    'Sélection des meilleures adresses locales…',
+    'Filtrage selon votre budget et style…',
+    'Préparation de votre starter pack…',
+  ];
+  let i = 0;
+  const el = document.getElementById('loading-msg');
+  const interval = setInterval(() => {
+    i = (i + 1) % msgs.length;
+    el.textContent = msgs[i];
+  }, 900);
+
+  // Simulation du délai API (en preview)
+  setTimeout(() => {
+    clearInterval(interval);
+    afficherResultats();
+  }, 2800);
+}
+
+// ——— RÉSULTATS —————————————————————————————————————————————
+
+function afficherResultats() {
+  const villeLabel = VILLES_LABELS[state.ville] || state.ville;
+  const data = MOCK_DATA[state.ville] || MOCK_DATA.amsterdam;
+
+  document.getElementById('res-ville-label').textContent = villeLabel;
+  document.getElementById('res-titre').textContent = 'Votre ' + villeLabel;
+  document.getElementById('res-hero').style.background = VILLE_GRADIENTS[state.ville] || VILLE_GRADIENTS.amsterdam;
+  document.getElementById('nb-lieux').textContent = data.incontournables.length + ' lieux curatés pour votre profil';
+  document.getElementById('nb-restos').textContent = data.restaurants.length + ' restaurants sélectionnés';
+
+  renderLieux(data.incontournables);
+  renderRestaurants(data.restaurants);
+  renderTips(data.tips);
+  renderItineraire(data.itineraire);
+  updateSauvegardeCounts();
+
+  showPage('resultats');
+}
+
+function renderLieux(lieux) {
+  const gradients = [
+    'linear-gradient(135deg,#FEF0EA,#F5EDE3)',
+    'linear-gradient(135deg,#EDE8E3,#D6CEC5)',
+    'linear-gradient(135deg,#F0EDE8,#E0D8CF)',
+    'linear-gradient(135deg,#FAFAF8,#EDE8E3)',
+    'linear-gradient(135deg,#F5F0EC,#E7E0D8)',
+  ];
+  document.getElementById('lieux-grid').innerHTML = lieux.map((l, idx) => `
+    <div class="bg-white rounded-2xl border border-pierre/60 overflow-hidden group transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+      <div class="h-36 relative flex items-center justify-center" style="background:${gradients[idx % gradients.length]}">
+        <span class="text-4xl opacity-70">📍</span>
+        <button
+          onclick="toggleSauvegarde('${l.nom}', this)"
+          data-nom="${l.nom}"
+          class="heart-btn absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 flex items-center justify-center text-encre-muted shadow-sm hover:text-accent hover:scale-110 transition-all"
+        >♡</button>
+      </div>
+      <div class="p-4">
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <h3 class="font-display text-lg text-encre leading-tight">${l.nom}</h3>
+          <span class="text-xs bg-pierre-light text-encre-muted rounded-full px-3 py-1 whitespace-nowrap">${l.duree}</span>
+        </div>
+        <p class="text-sm text-encre-muted mb-3 leading-relaxed">${l.desc}</p>
+        <div class="flex items-center gap-3 text-xs text-encre-muted mb-3">
+          <span>💶 ${l.prix}</span>
+          <span class="truncate">🕐 ${l.horaires}</span>
+        </div>
+        <div class="bg-accent-light rounded-xl p-3 mb-3">
+          <p class="text-xs text-accent font-medium leading-relaxed">✦ ${l.pourquoi}</p>
+        </div>
+        <button onclick="toggleTip(this)" class="text-xs text-encre-muted hover:text-encre transition-colors underline underline-offset-2">
+          💡 Voir le tip local
+        </button>
+        <div class="tip-content hidden mt-2 text-xs text-encre bg-pierre-light rounded-lg p-3 leading-relaxed">
+          ${l.tip}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRestaurants(restos) {
+  document.getElementById('restos-grid').innerHTML = restos.map(r => `
+    <div class="bg-white rounded-2xl border border-pierre/60 p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1 min-w-0">
+          <h3 class="font-display text-lg text-encre leading-tight mb-2">${r.nom}</h3>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="bg-accent-light text-accent text-xs rounded-full px-3 py-1">${r.cuisine}</span>
+            <span class="bg-pierre-light text-encre-muted text-xs rounded-full px-3 py-1">${r.budget}</span>
+          </div>
+        </div>
+        <button
+          onclick="toggleSauvegarde('${r.nom}', this)"
+          data-nom="${r.nom}"
+          class="heart-btn ml-3 h-8 w-8 rounded-full bg-pierre-light flex items-center justify-center text-encre-muted flex-shrink-0 hover:text-accent hover:scale-110 transition-all"
+        >♡</button>
+      </div>
+      <p class="text-sm text-encre-muted mb-3 leading-relaxed">${r.ambiance}</p>
+      <p class="text-xs text-encre-muted mb-3">📍 ${r.adresse}</p>
+      <button onclick="toggleTip(this)" class="text-xs text-encre-muted hover:text-encre transition-colors underline underline-offset-2">
+        💡 Astuce réservation
+      </button>
+      <div class="tip-content hidden mt-2 text-xs text-encre bg-pierre-light rounded-lg p-3 leading-relaxed">
+        ${r.tip}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTips(tips) {
+  const icons = ['🗝️','⚡','💬','🚇','🎯','🌟','💰','📱'];
+  document.getElementById('tips-grid').innerHTML = tips.map((tip, i) => `
+    <div class="tip-card bg-white rounded-2xl border border-pierre/60 p-4 flex items-start gap-3 hover:shadow-sm transition-shadow">
+      <span class="text-xl flex-shrink-0 mt-0.5">${icons[i % icons.length]}</span>
+      <p class="text-sm text-encre leading-relaxed">${tip}</p>
+    </div>
+  `).join('');
+}
+
+function renderItineraire(jours) {
+  document.getElementById('itineraire-container').innerHTML = jours.map(j => `
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="h-8 w-8 rounded-full bg-encre text-fond text-sm font-medium flex items-center justify-center flex-shrink-0">${j.jour}</div>
+        <h3 class="font-display text-xl text-encre">${j.titre}</h3>
+      </div>
+      <div class="relative pl-10">
+        <div class="absolute left-4 top-0 bottom-0 w-px bg-pierre"></div>
+        <div class="space-y-3">
+          ${j.etapes.map(e => `
+            <div class="relative">
+              <div class="absolute -left-6 top-3 h-2 w-2 rounded-full bg-accent border-2 border-fond"></div>
+              <div class="bg-white rounded-xl border border-pierre/60 p-4">
+                <div class="flex items-start gap-3">
+                  <div class="text-right min-w-[52px] flex-shrink-0">
+                    <div class="text-sm font-medium text-encre">${e.heure}</div>
+                    <div class="text-xs text-encre-muted">${e.duree}</div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-encre text-sm">${e.lieu}</div>
+                    <p class="text-xs text-encre-muted mt-1 leading-relaxed">${e.note}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ——— INTERACTIONS ——————————————————————————————————————————
+
+function toggleTip(btn) {
+  const content = btn.nextElementSibling;
+  if (content.classList.contains('hidden')) {
+    content.classList.remove('hidden');
+    btn.textContent = btn.textContent.includes('Voir') ? '💡 Masquer le tip' : '💡 Masquer';
+  } else {
+    content.classList.add('hidden');
+    btn.textContent = btn.textContent.includes('Masquer le tip') ? '💡 Voir le tip local' : '💡 Astuce réservation';
+  }
+}
+
+function toggleSauvegarde(nom, btn) {
+  if (state.sauvegardes.has(nom)) {
+    state.sauvegardes.delete(nom);
+    btn.textContent = '♡';
+    btn.classList.remove('saved');
+  } else {
+    state.sauvegardes.add(nom);
+    btn.textContent = '♥';
+    btn.classList.add('saved');
+  }
+  updateSauvegardeCounts();
+}
+
+function updateSauvegardeCounts() {
+  const n = state.sauvegardes.size;
+  const txt = n + ' lieu' + (n > 1 ? 'x' : '') + ' sauvegardé' + (n > 1 ? 's' : '');
+  document.getElementById('res-sauvegardes-count').textContent = txt;
+  document.getElementById('footer-sauvegardes').textContent = n;
+}
+
+function exporterMaps() {
+  const lieux = state.sauvegardes.size > 0
+    ? [...state.sauvegardes]
+    : (MOCK_DATA[state.ville] || MOCK_DATA.amsterdam).incontournables.slice(0, 4).map(l => l.nom);
+  const ville = VILLES_LABELS[state.ville] || 'Amsterdam';
+  const encoded = lieux.map(l => encodeURIComponent(l + ', ' + ville)).join('/');
+  window.open('https://www.google.com/maps/dir/' + encoded, '_blank');
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.remove('bg-encre', 'text-fond');
+    t.classList.add('text-encre-muted', 'hover:text-encre', 'hover:bg-pierre-light');
+  });
+  event.target.classList.add('bg-encre', 'text-fond');
+  event.target.classList.remove('text-encre-muted', 'hover:text-encre', 'hover:bg-pierre-light');
+}
+
+// ——— INIT ——————————————————————————————————————————————————
+// La landing page est déjà active par défaut (class="page active")
+</script>
+</body>
+</html>
