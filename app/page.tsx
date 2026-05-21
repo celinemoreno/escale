@@ -202,6 +202,8 @@ export default function LandingPage() {
         <div className="flex whitespace-nowrap animate-marquee">
           <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
           <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
+          <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
+          <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
         </div>
       </div>
 
