@@ -127,12 +127,12 @@ export default function LandingPage() {
           <div className="relative z-[2] h-full flex flex-col justify-end p-7 sm:p-12">
             <div className="max-w-3xl">
               <h1 className="font-display font-black text-rougebordeaux text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-5 max-w-2xl">
-                La plus belle destination du monde est à 2h de chez vous.
+                Votre itinéraire adapté<br />à vos envies, créé pour vous<br />en quelques minutes.
               </h1>
 
               {/* Sous-titre avec typewriter */}
               <p className="text-base sm:text-lg mb-8 leading-relaxed font-body" style={{ color: 'rgba(127,3,3,0.8)' }}>
-                Créez votre itinéraire idéal selon vos envies pour{' '}
+                12 destinations en Nouvelle-Aquitaine vous attendent pour{' '}
                 <span className="font-semibold">
                   {displayed}
                   <span className="cursor-blink inline-block w-[2px] h-[0.9em] bg-rougebordeaux ml-0.5 align-middle" />
