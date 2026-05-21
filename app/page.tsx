@@ -48,7 +48,7 @@ const ETAPES = [
   },
 ];
 
-const TICKER = '— Préparez votre escapade parmi 12 villes de France ';
+const TICKER = '— Préparez votre escapade parmi 12 villes de France : Angoulême, La Rochelle, Brive-la-Gaillarde, Aubusson, Niort, Sarlat-la-Canéda, Bordeaux, Limoges, Dax, Agen, Biarritz, Poitiers ';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function LandingPage() {
   // ── Slideshow ──
   const [currentPhoto, setCurrentPhoto] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setCurrentPhoto(p => (p + 1) % PHOTOS.length), 5000);
+    const id = setInterval(() => setCurrentPhoto(p => (p + 1) % PHOTOS.length), 8000);
     return () => clearInterval(id);
   }, []);
 
@@ -119,7 +119,7 @@ export default function LandingPage() {
           ))}
 
           {/* Overlay crème légère */}
-          <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(239,232,223,0.42)' }} />
+          <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(239,232,223,0.62)' }} />
 
           {/* Crédit photo — bas droite */}
           <div className="absolute bottom-4 right-5 z-[3]">
@@ -133,13 +133,13 @@ export default function LandingPage() {
 
           {/* Contenu */}
           <div className="relative z-[2] h-full flex flex-col justify-end p-7 sm:p-12">
-            <div className="max-w-2xl">
-              <h1 className="font-display font-black text-rougebordeaux text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-5">
+            <div className="max-w-3xl">
+              <h1 className="font-display font-black text-rougebordeaux text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-5 max-w-2xl">
                 La plus belle destination du monde est à 2h de chez vous.
               </h1>
 
               {/* Sous-titre avec typewriter */}
-              <p className="text-base sm:text-lg mb-8 leading-relaxed font-body max-w-lg" style={{ color: 'rgba(127,3,3,0.8)' }}>
+              <p className="text-base sm:text-lg mb-8 leading-relaxed font-body" style={{ color: 'rgba(127,3,3,0.8)' }}>
                 Créez votre itinéraire idéal selon vos envies pour{' '}
                 <span className="font-semibold">
                   {displayed}
@@ -200,8 +200,8 @@ export default function LandingPage() {
       {/* ── TICKER DÉFILANT ── */}
       <div className="bg-bleuinuit py-5 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
-          <span className="font-display text-xl font-bold text-beigesable px-8">{TICKER}</span>
-          <span className="font-display text-xl font-bold text-beigesable px-8">{TICKER}</span>
+          <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
+          <span className="font-display text-3xl font-bold text-beigesable px-8">{TICKER}</span>
         </div>
       </div>
 

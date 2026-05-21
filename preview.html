@@ -45,12 +45,12 @@
     .grain::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-      opacity: 0.09; pointer-events: none; z-index: 4;
+      opacity: 0.14; pointer-events: none; z-index: 4;
     }
 
     /* ── Ticker marquee ── */
-    .ticker-wrap { display: flex; white-space: nowrap; animation: marquee 35s linear infinite; }
-    .ticker-text { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #d8ba98; padding: 0 32px; }
+    .ticker-wrap { display: flex; white-space: nowrap; animation: marquee 28s linear infinite; }
+    .ticker-text { font-family: 'Fraunces', Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #d8ba98; padding: 0 32px; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
     /* ── Cursor blink ── */
@@ -107,7 +107,7 @@
       <img id="hero-img-b" class="absolute inset-0 w-full h-full object-cover" style="opacity:0; transition:opacity 1s ease;" />
 
       <!-- Overlay crème légère -->
-      <div class="absolute inset-0 z-[1]" style="background: rgba(239,232,223,0.42);"></div>
+      <div class="absolute inset-0 z-[1]" style="background: rgba(239,232,223,0.62);"></div>
 
       <!-- Crédit photo — bas droite -->
       <div class="absolute z-[3]" style="bottom:16px; right:20px;">
@@ -116,11 +116,11 @@
 
       <!-- Contenu -->
       <div class="relative z-[2] h-full flex flex-col justify-end p-7 sm:p-12">
-        <div class="max-w-2xl">
-          <h1 class="font-display font-black leading-[1.05] mb-5" style="color:#7f0303; font-size: clamp(2rem, 5vw, 3.75rem);">
+        <div class="max-w-3xl">
+          <h1 class="font-display font-black leading-[1.05] mb-5 max-w-2xl" style="color:#7f0303; font-size: clamp(2rem, 5vw, 3.75rem);">
             La plus belle destination du monde est à 2h de chez vous.
           </h1>
-          <p class="text-base sm:text-lg mb-8 leading-relaxed max-w-lg" style="color: rgba(127,3,3,0.8);">
+          <p class="text-base sm:text-lg mb-8 leading-relaxed" style="color: rgba(127,3,3,0.8);">
             Créez votre itinéraire idéal selon vos envies pour
             <span style="font-weight:600;"><span id="typewriter-text"></span><span class="cursor-blink"></span></span>
           </p>
@@ -192,8 +192,8 @@
   <!-- TICKER DÉFILANT -->
   <div style="background:#0f414a; padding:20px 0; overflow:hidden;">
     <div class="ticker-wrap">
-      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France </span>
-      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France </span>
+      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France : Angoulême, La Rochelle, Brive-la-Gaillarde, Aubusson, Niort, Sarlat-la-Canéda, Bordeaux, Limoges, Dax, Agen, Biarritz, Poitiers</span>
+      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France : Angoulême, La Rochelle, Brive-la-Gaillarde, Aubusson, Niort, Sarlat-la-Canéda, Bordeaux, Limoges, Dax, Agen, Biarritz, Poitiers</span>
     </div>
   </div>
 
@@ -534,7 +534,7 @@ function initSlideshow() {
 
     credit.textContent = PHOTOS[heroIndex].credit;
     heroActive = incomingId;
-  }, 5000);
+  }, 8000);
 }
 
 // ── TYPEWRITER ─────────────────────────────────────────────────
