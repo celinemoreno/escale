@@ -207,12 +207,12 @@ export default function LandingPage() {
 
       {/* ── SECTION CARTE POSTALE ── */}
       <section
-        className="px-4 sm:px-8 py-16"
+        className="p-4 sm:p-8"
         style={{
           background: 'repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 35px, #96c0ce 35px, #96c0ce 65px)',
         }}
       >
-        <div className="w-full bg-white rounded-2xl shadow-xl p-10 sm:p-14">
+        <div className="w-full bg-white rounded-2xl p-10 sm:p-14">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-10">
               <span className="font-display text-2xl font-bold text-bleuinuit">Escale</span>
