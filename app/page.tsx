@@ -36,8 +36,8 @@ const ETAPES = [
     num: '02',
     titre: 'La sélection IA',
     detail: 'Claude choisit les adresses vraiment faites pour vous — pas des listes Wikipedia.',
-    bg: 'bg-rougebordeaux',
-    text: 'text-bleuciel',
+    bg: 'bg-bleuciel',
+    text: 'text-bleuinuit',
   },
   {
     num: '03',
@@ -173,10 +173,10 @@ export default function LandingPage() {
       {/* ── COMMENT ÇA MARCHE ── */}
       <section className="max-w-5xl mx-auto px-6 py-20 sm:py-28">
         <div className="text-center mb-16">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-bleuinuit mb-3">
-            Comment ça marche ?
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-rougebordeaux mb-3">
+            Prêt.e à partir ?
           </h2>
-          <p className="text-bleuinuit/50 font-body">De zéro à votre itinéraire en 3 étapes.</p>
+          <p className="text-rougebordeaux/60 font-body">Votre itinéraire sur mesure en 3 étapes.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-4">
@@ -186,7 +186,7 @@ export default function LandingPage() {
             return (
               <div
                 key={e.num}
-                className={`${e.bg} ${e.text} ${rotations[i]} ${translateY[i]} rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 transition-transform duration-300 hover:rotate-0 hover:scale-105 hover:z-10 cursor-default shadow-lg`}
+                className={`${e.bg} ${e.text} ${rotations[i]} ${translateY[i]} rounded-3xl p-9 w-full sm:w-80 flex-shrink-0 transition-transform duration-300 hover:rotate-0 hover:scale-105 hover:z-10 cursor-default shadow-lg`}
               >
                 <div className="font-display text-5xl font-black mb-4 opacity-30">{e.num}</div>
                 <h3 className="font-display font-bold text-xl mb-2">{e.titre}</h3>
