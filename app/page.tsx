@@ -150,11 +150,10 @@ export default function LandingPage() {
                 <button
                   disabled
                   title="Bientôt disponible"
-                  className="flex-1 px-6 py-3.5 rounded-full text-sm font-medium cursor-not-allowed text-center flex items-center justify-center gap-2"
-                  style={{ border: '1px solid rgba(15,65,74,0.2)', color: 'rgba(15,65,74,0.3)' }}
+                  className="flex-1 px-6 py-3.5 rounded-full text-sm font-semibold cursor-not-allowed text-center flex items-center justify-center gap-2 bg-cremeivoire text-bleuinuit"
                 >
                   <span>Quelle destination me correspondrait ?</span>
-                  <span className="text-xs opacity-60 shrink-0">Bientôt</span>
+                  <span className="text-xs opacity-50 shrink-0">Bientôt</span>
                 </button>
               </div>
             </div>
