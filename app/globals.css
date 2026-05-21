@@ -10,18 +10,18 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #FEFAEF;
-  color: #1F0C06;
+  background-color: #efe8df;
+  color: #0f414a;
   font-family: var(--font-outfit);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #FEFAEF; }
-::-webkit-scrollbar-thumb { background: rgba(31,12,6,0.15); border-radius: 3px; }
+::-webkit-scrollbar-track { background: #efe8df; }
+::-webkit-scrollbar-thumb { background: rgba(15,65,74,0.15); border-radius: 3px; }
 
-::selection { background-color: #F9DE76; color: #1F0C06; }
+::selection { background-color: #96c0ce; color: #efe8df; }
 
 @layer utilities {
   .font-display { font-family: var(--font-fraunces); }

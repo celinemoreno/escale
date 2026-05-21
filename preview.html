@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Escale — Découvrez la France autrement</title>
+  <title>Escale — Nouvelle-Aquitaine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            rouge:  '#F44839',
-            blanc:  '#FEFAEF',
-            bleu:   '#75BBE8',
-            jaune:  '#F9DE76',
-            vert:   '#A4A85A',
-            marron: '#1F0C06',
+            beigesable:    '#d8ba98',
+            rougebordeaux: '#7f0303',
+            cremeivoire:   '#efe8df',
+            bleuciel:      '#96c0ce',
+            bleuinuit:     '#0f414a',
           },
           fontFamily: {
             display: ['Fraunces', 'Georgia', 'serif'],
@@ -36,7 +35,7 @@
 
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Outfit', system-ui, sans-serif; background: #FEFAEF; color: #1F0C06; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Outfit', system-ui, sans-serif; background: #efe8df; color: #0f414a; -webkit-font-smoothing: antialiased; }
     .font-display { font-family: 'Fraunces', Georgia, serif; }
     .page { display: none; }
     .page.active { display: block; }
@@ -49,29 +48,33 @@
       opacity: 0.09; pointer-events: none; z-index: 4;
     }
 
+    /* ── Ticker marquee ── */
+    .ticker-wrap { display: flex; white-space: nowrap; animation: marquee 35s linear infinite; }
+    .ticker-text { font-family: 'Outfit', sans-serif; font-size: 0.875rem; color: #d8ba98; letter-spacing: 0.05em; padding: 0 24px; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
     /* ── Step cards hover ── */
     .step-card { cursor: default; transition: transform 0.3s ease, box-shadow 0.3s ease; }
 
     /* ── Questionnaire ── */
     .question-slide { animation: slideIn 0.3s cubic-bezier(.25,.46,.45,.94); }
     @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    .option-card { transition: all 0.15s ease; cursor: pointer; }
-    .option-card:hover { border-color: #1F0C06 !important; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(-1px); }
-    .option-card.selected { background: #1F0C06 !important; color: #FEFAEF !important; border-color: #1F0C06 !important; }
-    .option-card.selected .opt-label { color: #FEFAEF; }
-    .option-card.selected .opt-desc { color: rgba(254,250,239,0.65); }
+    .option-card { transition: all 0.15s ease; cursor: pointer; border: 2px solid rgba(15,65,74,0.15); background: white; }
+    .option-card:hover { border-color: #0f414a !important; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(-1px); }
+    .option-card.selected { background: #0f414a !important; color: #efe8df !important; border-color: #0f414a !important; }
+    .option-card.selected .opt-label { color: #efe8df; }
+    .option-card.selected .opt-desc { color: rgba(239,232,223,0.65); }
 
     /* ── Results ── */
     .result-section { animation: fadeUp 0.4s ease; }
     @keyframes fadeUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .heart-btn { transition: all 0.2s; }
-    .heart-btn.saved { background: #F44839 !important; color: white; transform: scale(1.1); }
+    .heart-btn.saved { background: #7f0303 !important; color: #96c0ce; transform: scale(1.1); }
 
     /* ── Misc ── */
-    ::selection { background: rgba(249,222,118,0.35); }
+    ::selection { background: rgba(150,192,206,0.4); color: #0f414a; }
     ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: rgba(31,12,6,0.15); border-radius: 3px; }
-    #dest-input::placeholder { color: rgba(254,250,239,0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(15,65,74,0.15); border-radius: 3px; }
   </style>
 </head>
 <body class="min-h-screen">
@@ -84,10 +87,10 @@
 
   <!-- NAVBAR -->
   <nav class="flex items-center justify-between px-6 sm:px-10 py-5 max-w-7xl mx-auto">
-    <span class="font-display text-2xl font-bold text-marron">Escale</span>
+    <span class="font-display text-2xl font-bold text-bleuinuit">Escale</span>
     <div class="flex items-center gap-6">
-      <span class="text-sm text-marron/50 hidden sm:block cursor-pointer hover:text-marron transition-colors">Comment ça marche</span>
-      <button class="h-9 px-5 rounded-full border border-marron/20 text-sm text-marron hover:bg-marron/5 transition-colors font-medium">Connexion</button>
+      <span class="text-sm hidden sm:block cursor-pointer transition-colors" style="color:rgba(15,65,74,0.5);">Comment ça marche</span>
+      <button class="h-9 px-5 rounded-full text-sm font-medium transition-colors" style="border:1px solid rgba(15,65,74,0.2); color:#0f414a;">Connexion</button>
     </div>
   </nav>
 
@@ -95,145 +98,241 @@
   <section class="px-4 sm:px-8 pb-8">
     <div class="grain relative w-full overflow-hidden rounded-4xl sm:rounded-5xl" style="height: clamp(480px, 78vh, 820px);">
 
-      <!-- Image de fond -->
       <img
         src="https://images.pexels.com/photos/14466528/pexels-photo-14466528.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop"
-        alt="Village de Rocamadour, France"
+        alt="Village de Rocamadour"
         class="absolute inset-0 w-full h-full object-cover"
         style="filter: blur(1px) brightness(0.82);"
       />
+      <div class="absolute inset-0 z-[1]" style="background: linear-gradient(to top, rgba(15,65,74,0.88) 0%, rgba(15,65,74,0.2) 55%, transparent 100%);"></div>
 
-      <!-- Gradient sombre en bas -->
-      <div class="absolute inset-0 z-[1]" style="background: linear-gradient(to top, rgba(31,12,6,0.8) 0%, rgba(31,12,6,0.2) 50%, transparent 100%);"></div>
-
-      <!-- Contenu -->
       <div class="relative z-[2] h-full flex flex-col justify-between p-7 sm:p-12">
 
         <!-- Badge -->
-        <div class="self-start inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs text-white font-medium" style="background: rgba(254,250,239,0.15); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(8px);">
-          <span>🇫🇷</span>
-          <span>5 villes françaises disponibles</span>
+        <div class="self-start inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium"
+          style="background: rgba(216,186,152,0.18); border: 1px solid rgba(216,186,152,0.35); color: #d8ba98;">
+          <span>🌿</span>
+          <span>12 destinations · Nouvelle-Aquitaine</span>
         </div>
 
-        <!-- Titre + search -->
+        <!-- Bas du hero -->
         <div class="max-w-2xl">
-          <h1 class="font-display font-black text-white leading-[1.05] mb-4" style="font-size: clamp(2rem, 5vw, 3.75rem);">
-            La plus belle destination du monde est à 2h de chez toi.
+          <h1 class="font-display font-black leading-[1.05] mb-4" style="color:#efe8df; font-size: clamp(2rem, 5vw, 3.75rem);">
+            La plus belle destination du monde est à 2h de chez vous.
           </h1>
-          <p class="text-base sm:text-lg mb-7 leading-relaxed max-w-lg" style="color: rgba(255,255,255,0.7);">
-            Paris, Lyon, Marseille — on cure le meilleur de chaque ville selon ton profil. Comme un local, en 30 secondes.
+          <p class="text-base sm:text-lg mb-8 leading-relaxed max-w-lg" style="color: rgba(239,232,223,0.7);">
+            On cure le meilleur de la Nouvelle-Aquitaine selon votre profil. Comme un ami bien renseigné, en 2 minutes.
           </p>
 
-          <!-- Barre de recherche -->
-          <div class="flex items-center gap-3 rounded-full p-2 max-w-md mb-4" style="background: rgba(254,250,239,0.15); border: 1px solid rgba(254,250,239,0.25); backdrop-filter: blur(12px);">
-            <span class="pl-3 text-lg flex-shrink-0">✈️</span>
-            <input
-              id="dest-input"
-              type="text"
-              placeholder="Paris, Lyon, Nice…"
-              class="flex-1 bg-transparent text-sm focus:outline-none min-w-0"
-              style="color: white;"
-              onkeydown="if(event.key==='Enter'){event.preventDefault();lancerQuestionnaire();}"
-            />
+          <!-- 2 CTAs côte à côte -->
+          <div class="flex flex-col sm:flex-row gap-3 max-w-xl">
             <button
-              onclick="lancerQuestionnaire()"
-              class="flex-shrink-0 h-10 px-5 rounded-full text-sm font-semibold transition-colors active:scale-95"
-              style="background: #FEFAEF; color: #1F0C06;"
-              onmouseover="this.style.background='#F9DE76'" onmouseout="this.style.background='#FEFAEF'"
+              onclick="showPage('destination')"
+              class="flex-1 px-6 py-3.5 rounded-full text-sm font-semibold transition-all text-center"
+              style="background:#d8ba98; color:#0f414a;"
+              onmouseover="this.style.filter='brightness(1.05)'" onmouseout="this.style.filter=''"
             >
-              Préparer →
+              Je sais où je vais →
             </button>
-          </div>
-          <p id="dest-error" class="mb-4 text-sm pl-4 hidden" style="color: #F9DE76;"></p>
-
-          <!-- Pills villes -->
-          <div class="flex flex-wrap gap-2">
-            <button onclick="choisirVille('paris')" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-white transition-all hover:bg-white/20" style="background: rgba(254,250,239,0.12); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(4px);">
-              <span>🗼</span><span>Paris</span>
-            </button>
-            <button onclick="choisirVille('lyon')" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-white transition-all hover:bg-white/20" style="background: rgba(254,250,239,0.12); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(4px);">
-              <span>🦁</span><span>Lyon</span>
-            </button>
-            <button onclick="choisirVille('marseille')" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-white transition-all hover:bg-white/20" style="background: rgba(254,250,239,0.12); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(4px);">
-              <span>⚓</span><span>Marseille</span>
-            </button>
-            <button onclick="choisirVille('bordeaux')" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-white transition-all hover:bg-white/20" style="background: rgba(254,250,239,0.12); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(4px);">
-              <span>🍷</span><span>Bordeaux</span>
-            </button>
-            <button onclick="choisirVille('nice')" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs text-white transition-all hover:bg-white/20" style="background: rgba(254,250,239,0.12); border: 1px solid rgba(254,250,239,0.2); backdrop-filter: blur(4px);">
-              <span>🌊</span><span>Nice</span>
+            <button
+              disabled
+              title="Bientôt disponible"
+              class="flex-1 px-6 py-3.5 rounded-full text-sm font-medium cursor-not-allowed text-center flex items-center justify-center gap-2"
+              style="border: 1px solid rgba(239,232,223,0.2); color: rgba(239,232,223,0.35);"
+            >
+              <span>Quelle destination me correspondrait ?</span>
+              <span style="font-size:0.7rem; opacity:0.6; white-space:nowrap;">Bientôt</span>
             </button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Crédit photo discret -->
-    <p class="text-right mt-1.5 pr-2" style="font-size: 10px; color: rgba(31,12,6,0.3);">Photo : Rocamadour, Lot — Pexels</p>
+    <p class="text-right mt-1.5 pr-2" style="font-size:10px; color:rgba(15,65,74,0.3);">Photo : Rocamadour, Lot · Pexels</p>
   </section>
 
   <!-- COMMENT ÇA MARCHE -->
   <section class="max-w-5xl mx-auto px-6 py-20 sm:py-28">
     <div class="text-center mb-16">
-      <h2 class="font-display font-bold text-3xl sm:text-4xl text-marron mb-3">Comment ça marche ?</h2>
-      <p class="text-marron/50">De zéro à ton itinéraire en 3 étapes.</p>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-bleuinuit mb-3">Comment ça marche ?</h2>
+      <p style="color:rgba(15,65,74,0.5);">De zéro à votre itinéraire en 3 étapes.</p>
     </div>
 
-    <!-- 3 cartes inclinées -->
     <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-4">
 
-      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg bg-marron text-blanc"
-        style="transform: rotate(-2deg) translateY(12px);"
+      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg"
+        style="background:#0f414a; color:#d8ba98; transform: rotate(-2deg) translateY(12px);"
         onmouseenter="this.style.transform='rotate(0deg) scale(1.05)'; this.style.zIndex='10';"
         onmouseleave="this.style.transform='rotate(-2deg) translateY(12px)'; this.style.zIndex='';">
         <div class="font-display text-5xl font-black mb-4" style="opacity:0.3;">01</div>
-        <h3 class="font-display font-bold text-xl mb-2">Ton profil en 2 min</h3>
-        <p class="text-sm leading-relaxed" style="opacity:0.75;">Style, budget, durée, heure d'arrivée. 6 questions, pas de formulaire barbant.</p>
+        <h3 class="font-display font-bold text-xl mb-2">Votre profil en 2 min</h3>
+        <p class="text-sm leading-relaxed" style="opacity:0.75;">État d'esprit, budget, rythme, envies. 11 questions pour cerner ce qui vous correspond vraiment.</p>
       </div>
 
-      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg bg-rouge text-blanc"
-        style="transform: rotate(1deg) translateY(-8px);"
+      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg"
+        style="background:#7f0303; color:#96c0ce; transform: rotate(1deg) translateY(-8px);"
         onmouseenter="this.style.transform='rotate(0deg) scale(1.05)'; this.style.zIndex='10';"
         onmouseleave="this.style.transform='rotate(1deg) translateY(-8px)'; this.style.zIndex='';">
         <div class="font-display text-5xl font-black mb-4" style="opacity:0.3;">02</div>
-        <h3 class="font-display font-bold text-xl mb-2">L'IA curation</h3>
-        <p class="text-sm leading-relaxed" style="opacity:0.75;">Claude sélectionne les adresses vraiment faites pour toi — pas des listes Wikipedia.</p>
+        <h3 class="font-display font-bold text-xl mb-2">La sélection IA</h3>
+        <p class="text-sm leading-relaxed" style="opacity:0.75;">Claude choisit les adresses vraiment faites pour vous — pas des listes Wikipedia.</p>
       </div>
 
-      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg bg-jaune text-marron"
-        style="transform: rotate(-1deg) translateY(20px);"
+      <div class="step-card rounded-3xl p-7 w-full sm:w-72 flex-shrink-0 shadow-lg"
+        style="background:#d8ba98; color:#0f414a; transform: rotate(-1deg) translateY(20px);"
         onmouseenter="this.style.transform='rotate(0deg) scale(1.05)'; this.style.zIndex='10';"
         onmouseleave="this.style.transform='rotate(-1deg) translateY(20px)'; this.style.zIndex='';">
         <div class="font-display text-5xl font-black mb-4" style="opacity:0.3;">03</div>
-        <h3 class="font-display font-bold text-xl mb-2">Ton starter pack</h3>
-        <p class="text-sm leading-relaxed" style="opacity:0.75;">Lieux, restaurants, tips de locaux, itinéraire optimisé. Prêt à partir.</p>
+        <h3 class="font-display font-bold text-xl mb-2">Votre starter pack</h3>
+        <p class="text-sm leading-relaxed" style="opacity:0.75;">Lieux, restaurants, tips locaux, itinéraire. Prêt à partir en Nouvelle-Aquitaine.</p>
       </div>
 
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-marron/10 px-6 py-6">
-    <div class="max-w-5xl mx-auto flex items-center justify-between text-xs text-marron/40">
-      <span class="font-display font-bold text-sm text-marron">Escale</span>
-      <span>Paris · Lyon · Marseille · Bordeaux · Nice</span>
+  <!-- TICKER DÉFILANT -->
+  <div style="background:#0f414a; padding:16px 0; overflow:hidden;">
+    <div class="ticker-wrap">
+      <span class="ticker-text">Nouvelle-Aquitaine · Bordeaux · Biarritz · Sarlat-la-Canéda · La Rochelle · Angoulême · Limoges · Dax · Niort · Poitiers · Agen · Aubusson · Brive-la-Gaillarde · </span>
+      <span class="ticker-text">Nouvelle-Aquitaine · Bordeaux · Biarritz · Sarlat-la-Canéda · La Rochelle · Angoulême · Limoges · Dax · Niort · Poitiers · Agen · Aubusson · Brive-la-Gaillarde · </span>
     </div>
-  </footer>
+  </div>
+
+  <!-- SECTION CARTE POSTALE -->
+  <section style="padding:64px 16px; background: repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 18px, #96c0ce 18px, #96c0ce 22px);">
+    <div class="max-w-2xl mx-auto rounded-4xl shadow-xl p-10 sm:p-14" style="background:white;">
+      <div class="text-center mb-10">
+        <div class="font-display text-2xl font-bold text-bleuinuit">Escale</div>
+        <p class="text-sm mt-1" style="color:rgba(15,65,74,0.5);">L'ami bien renseigné pour la Nouvelle-Aquitaine</p>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="mb-8">
+        <h3 class="font-display font-bold text-lg text-bleuinuit mb-1">Restez dans la boucle</h3>
+        <p class="text-sm mb-4" style="color:rgba(15,65,74,0.55);">Nouvelles destinations, tips locaux, coulisses du projet.</p>
+        <div class="flex gap-2">
+          <input
+            type="email"
+            placeholder="votre@email.com"
+            class="flex-1 h-11 px-4 rounded-full text-sm focus:outline-none font-body"
+            style="border:1px solid rgba(15,65,74,0.2); color:#0f414a;"
+          />
+          <button class="h-11 px-5 rounded-full text-sm font-semibold whitespace-nowrap transition-all" style="background:#7f0303; color:#96c0ce;">
+            S'inscrire
+          </button>
+        </div>
+      </div>
+
+      <hr style="border-color:rgba(15,65,74,0.1); margin-bottom:2rem;" />
+
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm mb-8" style="color:rgba(15,65,74,0.5);">
+        <a href="#" class="hover:text-bleuinuit transition-colors">Une suggestion ?</a>
+        <a href="#" class="hover:text-bleuinuit transition-colors">Nous contacter</a>
+        <a href="#" class="hover:text-bleuinuit transition-colors">Mentions légales</a>
+      </div>
+
+      <p class="text-center text-xs" style="color:rgba(15,65,74,0.3);">© 2026 Escale — fait avec passion par Céline</p>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE : DESTINATION (sélecteur de ville)
+═══════════════════════════════════════════════════════════ -->
+<div id="page-destination" class="page min-h-screen" style="background:#efe8df;">
+
+  <header class="flex items-center justify-between px-6 py-5" style="border-bottom:1px solid rgba(15,65,74,0.1);">
+    <button onclick="showPage('landing')" class="font-display text-xl text-bleuinuit" style="background:none;border:none;cursor:pointer;">← Escale</button>
+    <span class="text-sm" style="color:rgba(15,65,74,0.5);">Étape 1 sur 11</span>
+  </header>
+
+  <div class="h-0.5" style="background:rgba(15,65,74,0.1);">
+    <div class="h-full" style="width:9%; background:#7f0303; transition:width 0.5s;"></div>
+  </div>
+
+  <div class="max-w-2xl mx-auto px-6 py-12">
+    <h1 class="font-display font-bold text-3xl text-bleuinuit mb-2">Où souhaitez-vous aller ?</h1>
+    <p class="mb-8" style="color:rgba(15,65,74,0.55);">12 destinations en Nouvelle-Aquitaine</p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <button onclick="choisirVille('angouleme','Angoulême')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🏛️</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Angoulême</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Charente</span>
+      </button>
+      <button onclick="choisirVille('la-rochelle','La Rochelle')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">⚓</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">La Rochelle</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Charente-Maritime</span>
+      </button>
+      <button onclick="choisirVille('brive','Brive-la-Gaillarde')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🍖</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Brive</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Corrèze</span>
+      </button>
+      <button onclick="choisirVille('aubusson','Aubusson')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🧵</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Aubusson</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Creuse</span>
+      </button>
+      <button onclick="choisirVille('niort','Niort')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🦆</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Niort</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Deux-Sèvres</span>
+      </button>
+      <button onclick="choisirVille('sarlat','Sarlat-la-Canéda')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🏰</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Sarlat</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Dordogne</span>
+      </button>
+      <button onclick="choisirVille('bordeaux','Bordeaux')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🍷</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Bordeaux</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Gironde</span>
+      </button>
+      <button onclick="choisirVille('limoges','Limoges')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🏺</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Limoges</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Haute-Vienne</span>
+      </button>
+      <button onclick="choisirVille('dax','Dax')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">♨️</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Dax</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Landes</span>
+      </button>
+      <button onclick="choisirVille('agen','Agen')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🌿</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Agen</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Lot-et-Garonne</span>
+      </button>
+      <button onclick="choisirVille('biarritz','Biarritz')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🏄</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Biarritz</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Pyrénées-Atlantiques</span>
+      </button>
+      <button onclick="choisirVille('poitiers','Poitiers')" class="city-card flex flex-col items-start p-4 rounded-2xl text-left transition-all" style="border:1px solid rgba(15,65,74,0.15); background:white;">
+        <span class="text-2xl mb-2">🎡</span>
+        <span class="font-display font-semibold text-sm text-bleuinuit">Poitiers</span>
+        <span class="text-xs mt-0.5" style="color:rgba(15,65,74,0.4);">Vienne</span>
+      </button>
+    </div>
+  </div>
 </div>
 
 
 <!-- ═══════════════════════════════════════════════════════════
      PAGE : QUESTIONNAIRE
 ═══════════════════════════════════════════════════════════ -->
-<div id="page-questionnaire" class="page min-h-screen flex flex-col bg-blanc">
+<div id="page-questionnaire" class="page min-h-screen flex flex-col" style="background:#efe8df;">
 
-  <header class="flex items-center justify-between px-6 py-5 border-b border-marron/10">
-    <button onclick="showPage('landing')" class="font-display text-xl font-bold text-marron hover:text-rouge transition-colors">Escale</button>
-    <span id="q-header-info" class="text-sm text-marron/50"></span>
+  <header class="flex items-center justify-between px-6 py-5" style="border-bottom:1px solid rgba(15,65,74,0.1);">
+    <button onclick="showPage('destination')" class="font-display text-xl text-bleuinuit" style="background:none;border:none;cursor:pointer;">← Escale</button>
+    <span id="q-header-info" class="text-sm" style="color:rgba(15,65,74,0.5);"></span>
   </header>
 
-  <div class="h-0.5 bg-marron/10">
-    <div id="progress-bar" class="h-full bg-rouge transition-all duration-500" style="width:0%"></div>
+  <div class="h-0.5" style="background:rgba(15,65,74,0.1);">
+    <div id="progress-bar" class="h-full transition-all duration-500" style="width:0%; background:#7f0303;"></div>
   </div>
 
   <div class="flex-1 flex flex-col items-center justify-center py-12 px-4">
@@ -242,12 +341,14 @@
 
   <div class="px-6 pb-8 max-w-2xl mx-auto w-full flex items-center justify-between">
     <button id="btn-precedent" onclick="precedent()"
-      class="h-11 px-6 rounded-full border border-marron/20 text-marron text-sm font-medium hover:bg-marron/5 transition-colors invisible">
+      class="h-11 px-6 rounded-full text-sm font-medium transition-colors invisible"
+      style="border:1px solid rgba(15,65,74,0.2); color:#0f414a; background:none; cursor:pointer;">
       ← Précédent
     </button>
     <div id="dots-container" class="flex gap-1.5"></div>
     <button id="btn-suivant" onclick="suivant()"
-      class="h-11 px-6 rounded-full bg-marron text-blanc text-sm font-medium hover:opacity-85 transition-opacity hidden">
+      class="h-11 px-6 rounded-full text-sm font-medium transition-opacity hidden"
+      style="background:#7f0303; color:#96c0ce; cursor:pointer;">
       Suivant →
     </button>
   </div>
@@ -257,69 +358,69 @@
 <!-- ═══════════════════════════════════════════════════════════
      PAGE : CHARGEMENT
 ═══════════════════════════════════════════════════════════ -->
-<div id="page-loading" class="page min-h-screen flex flex-col items-center justify-center text-center bg-blanc px-6">
+<div id="page-loading" class="page min-h-screen flex flex-col items-center justify-center text-center px-6" style="background:#efe8df;">
   <div class="mb-8">
     <div class="relative h-16 w-16 mx-auto mb-6">
-      <div class="absolute inset-0 rounded-full border-2 border-marron/15 animate-spin" style="border-top-color: #F44839;"></div>
+      <div class="absolute inset-0 rounded-full border-2 animate-spin" style="border-color:rgba(15,65,74,0.15); border-top-color:#7f0303;"></div>
       <span class="absolute inset-0 flex items-center justify-center text-2xl">✈️</span>
     </div>
-    <h2 class="font-display font-bold text-2xl text-marron mb-2">Escale prépare ton voyage…</h2>
-    <p class="text-marron/60 text-sm max-w-xs mx-auto" id="loading-msg">Claude analyse ton profil et sélectionne les meilleures adresses</p>
+    <h2 class="font-display font-bold text-2xl text-bleuinuit mb-2">On cherche pour vous…</h2>
+    <p class="text-sm max-w-xs mx-auto" id="loading-msg" style="color:rgba(15,65,74,0.6);">Claude analyse votre profil et sélectionne les meilleures adresses</p>
   </div>
   <div class="flex gap-1.5 mt-4">
-    <div class="h-1.5 w-1.5 rounded-full bg-rouge animate-bounce" style="animation-delay:0s"></div>
-    <div class="h-1.5 w-1.5 rounded-full bg-rouge animate-bounce" style="animation-delay:0.15s"></div>
-    <div class="h-1.5 w-1.5 rounded-full bg-rouge animate-bounce" style="animation-delay:0.3s"></div>
+    <div class="h-1.5 w-1.5 rounded-full animate-bounce" style="background:#7f0303; animation-delay:0s;"></div>
+    <div class="h-1.5 w-1.5 rounded-full animate-bounce" style="background:#7f0303; animation-delay:0.15s;"></div>
+    <div class="h-1.5 w-1.5 rounded-full animate-bounce" style="background:#7f0303; animation-delay:0.3s;"></div>
   </div>
-  <p class="mt-10 text-xs text-marron/30">(Mode preview — résultats fictifs)</p>
+  <p class="mt-10 text-xs" style="color:rgba(15,65,74,0.3);">(Mode preview — résultats fictifs)</p>
 </div>
 
 
 <!-- ═══════════════════════════════════════════════════════════
      PAGE : RÉSULTATS
 ═══════════════════════════════════════════════════════════ -->
-<div id="page-resultats" class="page bg-blanc min-h-screen">
+<div id="page-resultats" class="page min-h-screen" style="background:white;">
 
   <!-- Header sticky -->
-  <header class="sticky top-0 z-30 border-b border-marron/10" style="background: rgba(254,250,239,0.95); backdrop-filter: blur(8px);">
+  <header class="sticky top-0 z-30" style="background:rgba(239,232,223,0.95); backdrop-filter:blur(8px); border-bottom:1px solid rgba(15,65,74,0.1);">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <button onclick="showPage('landing')" class="font-display font-bold text-xl text-marron hover:text-rouge transition-colors">Escale</button>
-        <span class="text-marron/30">·</span>
-        <span id="res-ville-label" class="font-display font-bold text-xl text-marron"></span>
+        <button onclick="showPage('landing')" class="font-display font-bold text-xl text-bleuinuit" style="background:none;border:none;cursor:pointer;">Escale</button>
+        <span style="color:rgba(15,65,74,0.3);">·</span>
+        <span id="res-ville-label" class="font-display font-bold text-xl text-bleuinuit"></span>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="showPage('questionnaire'); reinitQuestionnaire()" class="text-sm text-marron/50 hover:text-marron transition-colors hidden sm:block">Modifier mon profil</button>
-        <button onclick="exporterMaps()" class="h-9 px-4 rounded-full bg-rouge text-white text-sm font-medium hover:opacity-85 transition-opacity">📍 Exporter Maps</button>
+        <button onclick="showPage('questionnaire'); reinitQuestionnaire()" class="text-sm hidden sm:block transition-colors" style="color:rgba(15,65,74,0.5); background:none;border:none;cursor:pointer;">Modifier mon profil</button>
+        <button onclick="exporterMaps()" class="h-9 px-4 rounded-full text-sm font-medium" style="background:#7f0303; color:#96c0ce; border:none; cursor:pointer;">📍 Exporter Maps</button>
       </div>
     </div>
     <nav class="max-w-6xl mx-auto px-6 flex gap-1 pb-3 overflow-x-auto">
-      <button onclick="scrollToSection('incontournables', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all bg-marron text-blanc">📍 Incontournables</button>
-      <button onclick="scrollToSection('restaurants', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-marron/50 hover:text-marron hover:bg-marron/5">🍽️ Restaurants</button>
-      <button onclick="scrollToSection('tips', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-marron/50 hover:text-marron hover:bg-marron/5">💡 Tips locaux</button>
-      <button onclick="scrollToSection('itineraire', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-marron/50 hover:text-marron hover:bg-marron/5">🗓️ Itinéraire</button>
+      <button onclick="scrollToSection('incontournables', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all" style="background:#0f414a; color:#d8ba98; border:none; cursor:pointer;">📍 Les lieux</button>
+      <button onclick="scrollToSection('restaurants', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all" style="background:none; border:none; cursor:pointer; color:rgba(15,65,74,0.5);">🍽️ Restaurants</button>
+      <button onclick="scrollToSection('tips', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all" style="background:none; border:none; cursor:pointer; color:rgba(15,65,74,0.5);">💡 Tips</button>
+      <button onclick="scrollToSection('itineraire', this)" class="nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all" style="background:none; border:none; cursor:pointer; color:rgba(15,65,74,0.5);">🗓️ Itinéraire</button>
     </nav>
   </header>
 
   <!-- Hero ville -->
-  <div id="res-hero" class="relative overflow-hidden flex items-end" style="height: 240px;">
-    <div class="absolute inset-0 z-10" style="background: linear-gradient(to top, rgba(31,12,6,0.5) 0%, transparent 100%);"></div>
+  <div id="res-hero" class="relative overflow-hidden flex items-end" style="height:240px;">
+    <div class="absolute inset-0 z-10" style="background:linear-gradient(to top, rgba(15,65,74,0.6) 0%, transparent 100%);"></div>
     <div class="relative z-20 px-8 pb-8 max-w-6xl mx-auto w-full">
-      <p class="text-sm mb-2" style="color:rgba(255,255,255,0.7);" id="res-sauvegardes-count">0 lieu sauvegardé</p>
-      <h1 class="font-display font-black text-white" style="font-size: clamp(2rem, 5vw, 3rem);" id="res-titre"></h1>
+      <p class="text-sm mb-2" style="color:rgba(239,232,223,0.7);" id="res-sauvegardes-count">0 lieu sauvegardé</p>
+      <h1 class="font-display font-black" style="color:#efe8df; font-size: clamp(2rem, 5vw, 3rem);" id="res-titre"></h1>
     </div>
   </div>
 
   <main class="max-w-6xl mx-auto px-6 py-12 space-y-16">
 
-    <!-- Incontournables -->
+    <!-- Lieux -->
     <section id="incontournables" class="result-section">
       <div class="mb-6">
         <div class="flex items-center gap-2 mb-1">
           <span>📍</span>
-          <h2 class="font-display font-bold text-2xl text-marron">Les incontournables</h2>
+          <h2 class="font-display font-bold text-2xl text-bleuinuit">Les lieux à faire</h2>
         </div>
-        <p class="text-sm text-marron/50 pl-7" id="nb-lieux"></p>
+        <p class="text-sm pl-7" id="nb-lieux" style="color:rgba(15,65,74,0.5);"></p>
       </div>
       <div id="lieux-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </section>
@@ -329,21 +430,21 @@
       <div class="mb-6">
         <div class="flex items-center gap-2 mb-1">
           <span>🍽️</span>
-          <h2 class="font-display font-bold text-2xl text-marron">Où manger</h2>
+          <h2 class="font-display font-bold text-2xl text-bleuinuit">Les restaurants</h2>
         </div>
-        <p class="text-sm text-marron/50 pl-7" id="nb-restos"></p>
+        <p class="text-sm pl-7" id="nb-restos" style="color:rgba(15,65,74,0.5);"></p>
       </div>
       <div id="restos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- Tips locaux -->
+    <!-- Tips -->
     <section id="tips" class="result-section">
       <div class="mb-6">
         <div class="flex items-center gap-2 mb-1">
           <span>💡</span>
-          <h2 class="font-display font-bold text-2xl text-marron">Tips locaux</h2>
+          <h2 class="font-display font-bold text-2xl text-bleuinuit">Les tips pratiques</h2>
         </div>
-        <p class="text-sm text-marron/50 pl-7">Ce que les guides ne te disent pas</p>
+        <p class="text-sm pl-7" style="color:rgba(15,65,74,0.5);">Ce que les guides ne disent pas</p>
       </div>
       <div id="tips-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
     </section>
@@ -353,21 +454,21 @@
       <div class="mb-6">
         <div class="flex items-center gap-2 mb-1">
           <span>🗓️</span>
-          <h2 class="font-display font-bold text-2xl text-marron">Itinéraire suggéré</h2>
+          <h2 class="font-display font-bold text-2xl text-bleuinuit">L'itinéraire suggéré</h2>
         </div>
-        <p class="text-sm text-marron/50 pl-7">Optimisé géographiquement selon tes favoris</p>
+        <p class="text-sm pl-7" style="color:rgba(15,65,74,0.5);">Optimisé géographiquement selon vos favoris</p>
       </div>
       <div id="itineraire-container"></div>
     </section>
 
     <!-- Footer actions -->
-    <div class="border-t border-marron/10 pt-12 flex flex-col sm:flex-row items-center gap-4 justify-between">
-      <p class="text-sm text-marron/50">
-        <span class="text-rouge font-medium" id="footer-sauvegardes">0</span> lieu(x) dans tes favoris
+    <div class="pt-12 flex flex-col sm:flex-row items-center gap-4 justify-between" style="border-top:1px solid rgba(15,65,74,0.1);">
+      <p class="text-sm" style="color:rgba(15,65,74,0.5);">
+        <span class="font-medium" id="footer-sauvegardes" style="color:#7f0303;">0</span> lieu(x) dans vos favoris
       </p>
       <div class="flex gap-3">
-        <button onclick="exporterMaps()" class="h-11 px-6 rounded-full border border-marron/20 text-marron text-sm font-medium hover:bg-marron/5 transition-colors">📍 Exporter vers Maps</button>
-        <button onclick="showPage('questionnaire'); reinitQuestionnaire()" class="h-11 px-6 rounded-full bg-marron text-blanc text-sm font-medium hover:opacity-85 transition-opacity">Recommencer</button>
+        <button onclick="exporterMaps()" class="h-11 px-6 rounded-full text-sm font-medium transition-colors" style="border:1px solid rgba(15,65,74,0.2); color:#0f414a; background:none; cursor:pointer;">📍 Exporter vers Maps</button>
+        <button onclick="showPage('destination')" class="h-11 px-6 rounded-full text-sm font-medium" style="background:#0f414a; color:#d8ba98; border:none; cursor:pointer;">Recommencer</button>
       </div>
     </div>
 
@@ -380,224 +481,199 @@
 ═══════════════════════════════════════════════════════════ -->
 <script>
 
-// ── QUESTIONS ─────────────────────────────────────────────────
-const QUESTIONS = [
+// ── QUESTIONS (vouvoiement) ────────────────────────────────────
+const QUESTIONS_BASE = [
   {
-    id: 'typeVoyage', question: 'Tu pars comment ?',
+    id: 'etatEsprit', question: 'Avec quel état d\'esprit partez-vous ?',
     options: [
-      { value: 'solo',    label: 'Solo',         icon: '🧳', desc: 'Liberté totale' },
-      { value: 'couple',  label: 'En couple',     icon: '❤️', desc: 'En amoureux' },
-      { value: 'amis',    label: 'Entre amis',    icon: '🥂', desc: 'Bonne ambiance' },
-      { value: 'famille', label: 'En famille',    icon: '👨‍👩‍👧', desc: 'Avec enfants' },
+      { value: 'ressourcer',  label: 'Se ressourcer',          icon: '🌿', desc: 'Calme, nature, déconnexion' },
+      { value: 'emerveiller', label: 'S\'émerveiller',         icon: '✨', desc: 'Découverte, beauté, surprise' },
+      { value: 'eclater',     label: 'S\'éclater',             icon: '🎉', desc: 'Fête, énergie, rencontres' },
+      { value: 'nouveau',     label: 'Vivre qqch de nouveau',  icon: '🧭', desc: 'Sortir des sentiers battus' },
     ]
   },
   {
-    id: 'duree', question: 'Combien de temps ?',
+    id: 'groupe', question: 'Vous partez avec qui ?',
     options: [
-      { value: '1jour',   label: '1 journée',    icon: '☀️', desc: 'Sprint découverte' },
-      { value: 'weekend', label: 'Week-end',      icon: '📅', desc: '2 à 3 jours' },
-      { value: 'semaine', label: 'Une semaine',   icon: '🗓️', desc: '5 à 7 jours' },
+      { value: 'seul',            label: 'Seul(e)',                  icon: '🧳', desc: 'Liberté totale' },
+      { value: 'couple',          label: 'En amoureux',              icon: '❤️', desc: 'Pour deux' },
+      { value: 'famille-petits',  label: 'Famille jeunes enfants',   icon: '👶', desc: 'Moins de 10 ans' },
+      { value: 'famille-ados',    label: 'Famille ados',             icon: '👦', desc: 'Ados à bord' },
+      { value: 'amis-petits',     label: 'Amis (2 à 4)',             icon: '🥂', desc: 'Petit comité' },
+      { value: 'amis-grands',     label: 'Amis (5+)',                icon: '🎊', desc: 'Grand groupe' },
     ]
   },
   {
-    id: 'heureArrivee', question: "Tu arrives quand ?", subtitle: 'Le premier jour du séjour',
+    id: 'duree', question: 'Combien de temps partez-vous ?',
     options: [
-      { value: 'matin',      label: 'Le matin',      icon: '🌅', desc: 'Avant 12h' },
-      { value: 'apres-midi', label: "L'après-midi",  icon: '🌤️', desc: '12h — 18h' },
-      { value: 'soir',       label: 'Le soir',        icon: '🌆', desc: 'Après 18h' },
+      { value: 'weekend',        label: 'Week-end',         icon: '📅', desc: '2 à 3 jours' },
+      { value: 'petite-semaine', label: 'Petite semaine',   icon: '🗓️', desc: '4 à 5 jours' },
+      { value: 'semaine',        label: 'Une semaine',      icon: '📆', desc: '6 à 7 jours' },
+      { value: 'deux-semaines',  label: 'Deux semaines +',  icon: '🏝️', desc: 'Long séjour' },
     ]
   },
   {
-    id: 'style', question: 'Quel est ton style ?',
+    id: 'envies', question: 'Quelles sont vos envies ?', subtitle: 'Jusqu\'à 3 choix', multi: true, maxSelect: 3,
     options: [
-      { value: 'culturel',      label: 'Culturel',    icon: '🏛️', desc: 'Musées & architecture' },
-      { value: 'gastronomique', label: 'Gastro',       icon: '🍽️', desc: 'Restaurants & marchés' },
-      { value: 'nature',        label: 'Nature',       icon: '🌿', desc: 'Parcs & balades' },
-      { value: 'festif',        label: 'Festif',       icon: '🎉', desc: 'Bars & vie nocturne' },
+      { value: 'plages',      label: 'Plages',        icon: '🏖️', desc: 'Mer, sable' },
+      { value: 'randonnees',  label: 'Randonnées',    icon: '🥾', desc: 'Trails, nature' },
+      { value: 'culture',     label: 'Culture',       icon: '🏛️', desc: 'Musées, patrimoine' },
+      { value: 'gastronomie', label: 'Gastronomie',   icon: '🍽️', desc: 'Cuisine locale' },
+      { value: 'sports',      label: 'Sports',        icon: '🏄', desc: 'Activités sportives' },
+      { value: 'fetes',       label: 'Fêtes',         icon: '🎊', desc: 'Vie nocturne' },
+      { value: 'nature',      label: 'Nature',        icon: '🌿', desc: 'Paysages, parcs' },
+      { value: 'calme',       label: 'Calme',         icon: '🧘', desc: 'Repos, déconnexion' },
+      { value: 'rencontres',  label: 'Rencontres',    icon: '🤝', desc: 'Locaux, voyageurs' },
     ]
   },
   {
-    id: 'budget', question: 'Ton budget par jour ?',
+    id: 'objectif', question: 'Qu\'espérez-vous ramener de ce voyage ?',
     options: [
-      { value: 'petit',       label: 'Petit budget', icon: '💶', desc: 'Moins de 50€' },
-      { value: 'moyen',       label: 'Moyen',         icon: '💳', desc: '50 à 150€' },
-      { value: 'confortable', label: 'Confortable',   icon: '✨', desc: 'Plus de 150€' },
+      { value: 'souvenirs',    label: 'Souvenirs & émotions',  icon: '📸', desc: 'Des moments marquants' },
+      { value: 'connaissance', label: 'Connaissance',           icon: '📚', desc: 'Apprendre, comprendre' },
+      { value: 'repos',        label: 'Repos',                  icon: '😴', desc: 'Vraiment décompresser' },
+      { value: 'rencontres',   label: 'Rencontres',             icon: '🤝', desc: 'Personnes, hasards' },
+      { value: 'surprise',     label: 'Se laisser surprendre',  icon: '🎲', desc: 'Au fil de l\'eau' },
     ]
   },
   {
-    id: 'contraintes', question: 'Des contraintes ?', subtitle: 'Sélectionne tout ce qui te concerne', multi: true,
+    id: 'rythme', question: 'Quel rythme vous correspond ?',
     options: [
-      { value: 'enfants',   label: 'Avec enfants',     icon: '🧒', desc: 'Kids-friendly' },
-      { value: 'mobilite',  label: 'Mobilité réduite', icon: '♿', desc: 'Accessibilité' },
-      { value: 'vegetarien',label: 'Végétarien',       icon: '🥗', desc: 'Options végé' },
-      { value: 'aucune',    label: 'Aucune',            icon: '✓',  desc: 'Tout me convient' },
+      { value: 'tranquille', label: 'Tranquille', icon: '🐢', desc: 'On prend le temps' },
+      { value: 'equilibre',  label: 'Équilibré',  icon: '⚖️', desc: 'Un peu de tout' },
+      { value: 'soutenu',    label: 'Soutenu',   icon: '⚡', desc: 'Maximum de choses' },
     ]
-  }
+  },
+  {
+    id: 'hebergement', question: 'Où aimez-vous dormir ?',
+    options: [
+      { value: 'camping', label: 'Van / Camping',           icon: '🏕️', desc: 'Plein air, liberté' },
+      { value: 'auberge', label: 'Auberge',                 icon: '🛏️', desc: 'Convivial, économique' },
+      { value: 'airbnb',  label: 'Airbnb / Location',       icon: '🏠', desc: 'Chez l\'habitant' },
+      { value: 'hotel',   label: 'Hôtel classique',         icon: '🏨', desc: 'Confort standard' },
+      { value: 'luxe',    label: 'Hôtel haut de gamme',     icon: '⭐', desc: 'Service premium' },
+      { value: 'insolite',label: 'Lieu insolite',            icon: '🌙', desc: 'Cabane, château…' },
+    ]
+  },
+  {
+    id: 'budget', question: 'Votre budget hébergement par nuit ?',
+    options: [
+      { value: 'mini',    label: 'Moins de 50€', icon: '💶', desc: 'Petit budget' },
+      { value: 'moyen',   label: '50 — 100€',    icon: '💳', desc: 'Budget moyen' },
+      { value: 'confort', label: '100 — 200€',   icon: '💎', desc: 'Confortable' },
+      { value: 'premium', label: 'Plus de 200€', icon: '✨', desc: 'Premium' },
+    ]
+  },
+  {
+    id: 'transport', question: 'Comment vous déplacez-vous ?', subtitle: 'Plusieurs choix possibles', multi: true,
+    options: [
+      { value: 'voiture',  label: 'Voiture',              icon: '🚗', desc: 'Liberté totale' },
+      { value: 'train',    label: 'Train / Transports',   icon: '🚂', desc: 'Sans conduire' },
+      { value: 'velo',     label: 'Vélo / À pied',        icon: '🚴', desc: 'Slow travel' },
+      { value: 'location', label: 'Location véhicule',    icon: '🔑', desc: 'Sur place' },
+    ]
+  },
+  {
+    id: 'contraintes', question: 'Y a-t-il des contraintes particulières ?', subtitle: 'Sélectionnez tout ce qui vous concerne', multi: true,
+    options: [
+      { value: 'animal',   label: 'Avec un animal',       icon: '🐕', desc: 'Pet-friendly' },
+      { value: 'mobilite', label: 'Mobilité réduite',     icon: '♿', desc: 'Accessibilité' },
+      { value: 'regimes',  label: 'Régimes alimentaires', icon: '🥗', desc: 'Végé, halal…' },
+      { value: 'aucune',   label: 'Rien de spécial',      icon: '✓',  desc: 'Tout me convient' },
+    ]
+  },
 ];
 
-// ── VILLES ────────────────────────────────────────────────────
-const VILLES_LABELS = { paris: 'Paris', lyon: 'Lyon', marseille: 'Marseille', bordeaux: 'Bordeaux', nice: 'Nice' };
-
-const VILLES_MAPPING = {
-  paris: 'paris', lyon: 'lyon', marseille: 'marseille', bordeaux: 'bordeaux', nice: 'nice',
+const QUESTION_REGIMES = {
+  id: 'regimes', question: 'Quels régimes alimentaires ?', subtitle: 'Sélectionnez tout ce qui vous concerne', multi: true,
+  options: [
+    { value: 'vegetarien', label: 'Végétarien',  icon: '🥦', desc: '' },
+    { value: 'vegan',      label: 'Vegan',        icon: '🌱', desc: '' },
+    { value: 'sansGluten', label: 'Sans gluten',  icon: '🌾', desc: '' },
+    { value: 'halal',      label: 'Halal',         icon: '🥩', desc: '' },
+    { value: 'casher',     label: 'Casher',        icon: '✡️', desc: '' },
+    { value: 'autre',      label: 'Autre',         icon: '➕', desc: '' },
+  ]
 };
 
+let ACTIVE_QUESTIONS = [...QUESTIONS_BASE];
+
+function buildActiveQuestions() {
+  const hasRegimes = (state.multi['contraintes'] || []).includes('regimes');
+  ACTIVE_QUESTIONS = hasRegimes ? [...QUESTIONS_BASE, QUESTION_REGIMES] : [...QUESTIONS_BASE];
+}
+
+// ── VILLE GRADIENTS ───────────────────────────────────────────
 const VILLE_GRADIENTS = {
-  paris:     'linear-gradient(135deg, #1F0C06 0%, #75BBE8 100%)',
-  lyon:      'linear-gradient(135deg, #F44839 0%, #F9DE76 100%)',
-  marseille: 'linear-gradient(135deg, #75BBE8 0%, #A4A85A 100%)',
-  bordeaux:  'linear-gradient(135deg, #A4A85A 0%, #F44839 100%)',
-  nice:      'linear-gradient(135deg, #75BBE8 0%, #F9DE76 100%)',
+  angouleme:   'linear-gradient(135deg, #0f414a 0%, #d8ba98 100%)',
+  'la-rochelle':'linear-gradient(135deg, #96c0ce 0%, #0f414a 100%)',
+  brive:       'linear-gradient(135deg, #7f0303 0%, #0f414a 100%)',
+  aubusson:    'linear-gradient(135deg, #0f414a 0%, #96c0ce 100%)',
+  niort:       'linear-gradient(135deg, #0f414a 0%, #96c0ce 100%)',
+  sarlat:      'linear-gradient(135deg, #7f0303 0%, #d8ba98 100%)',
+  bordeaux:    'linear-gradient(135deg, #7f0303 0%, #0f414a 100%)',
+  limoges:     'linear-gradient(135deg, #96c0ce 0%, #d8ba98 100%)',
+  dax:         'linear-gradient(135deg, #0f414a 0%, #96c0ce 100%)',
+  agen:        'linear-gradient(135deg, #d8ba98 0%, #7f0303 100%)',
+  biarritz:    'linear-gradient(135deg, #96c0ce 0%, #0f414a 100%)',
+  poitiers:    'linear-gradient(135deg, #7f0303 0%, #96c0ce 100%)',
 };
 
-// ── MOCK DATA — PARIS ─────────────────────────────────────────
+// ── MOCK DATA ─────────────────────────────────────────────────
 const MOCK_DATA = {
-  paris: {
+  bordeaux: {
     incontournables: [
-      {
-        nom: 'Musée d\'Orsay',
-        desc: 'Les impressionnistes dans une gare Belle Époque — Monet, Renoir, Van Gogh sous la grande horloge.',
-        pourquoi: 'Pour un voyageur culturel, c\'est 10× plus intime que le Louvre avec des œuvres 10× plus belles selon les goûts modernes.',
-        duree: '2h30', prix: '16€', horaires: 'Mar-Dim 9h30-18h (21h45 le jeudi), fermé lundi',
-        tip: 'Le jeudi soir après 18h : les cars de touristes sont repartis. La file fait moitié moins de longueur et l\'ambiance est incroyable.',
-      },
-      {
-        nom: 'Sainte-Chapelle',
-        desc: 'La plus belle salle de la Cité, entièrement en vitraux du XIIIe siècle — un choc visuel absolu.',
-        pourquoi: 'En 15 minutes de visite, tu gardes une image en tête pour le reste de ta vie. Aucun autre monument ne fait cet effet.',
-        duree: '45 min', prix: '13€', horaires: 'Tlj 9h-17h (19h en été)',
-        tip: 'Réserve en ligne et arrive au créneau du matin : tu évites la foule de Notre-Dame qui déborde ici à partir de 11h.',
-      },
-      {
-        nom: 'Le Marais — rue de Bretagne',
-        desc: 'Le vrai Paris bobo-local : fromager, caviste, fleuriste et marché Enfants-Rouges au fond de la ruelle.',
-        pourquoi: 'Le Marais touristique et le Marais local ne sont pas le même quartier — cette rue est le second.',
-        duree: 'Demi-journée', prix: 'Gratuit', horaires: 'Accessible 24h/24, marché Mar-Sam 8h30-13h',
-        tip: 'Le marché couvert des Enfants-Rouges (1615 !) a des plats chauds incroyables à 12€. Arrive avant 12h30 sinon c\'est complet.',
-      },
-      {
-        nom: 'Canal Saint-Martin',
-        desc: 'Les écluses, les péniches et les terrasses — le Paris qui ne ressemble pas aux cartes postales.',
-        pourquoi: 'Tu peux y passer 3h sans voir un seul touriste. Idéal pour décompresser entre deux musées.',
-        duree: '1h30', prix: 'Gratuit', horaires: 'Accessible 24h/24',
-        tip: 'Le dimanche, le quai de Valmy est fermé aux voitures de 9h à 17h — des centaines de Parisiens s\'y retrouvent avec vélos et pique-niques.',
-      },
-      {
-        nom: 'Palais Royal — jardins et galeries',
-        desc: 'Un jardin secret en plein Paris, entouré des colonnes de Buren et des galeries d\'antiquaires.',
-        pourquoi: 'C\'est l\'un des rares endroits vraiment calmes du centre historique, et il est gratuit. Les Parisiens y viennent lire.',
-        duree: '1h', prix: 'Gratuit', horaires: 'Tlj 7h-23h (selon saison)',
-        tip: 'Le restaurant Le Grand Véfour (1784) donne sur le jardin. Regarde le menu depuis la vitre — les prix te feront apprécier ton sandwich.',
-      },
-      {
-        nom: 'Montmartre — Abbesses',
-        desc: 'Le vrai Montmartre est à Abbesses, pas Sacré-Cœur : des ateliers d\'artistes, des cafés et des ruelles pavées.',
-        pourquoi: 'Place du Tertre = attrape-touriste. Rue Lepic, rue des Abbesses et Villa Leandre = la magie intacte.',
-        duree: '2h', prix: 'Gratuit', horaires: 'Accessible 24h/24',
-        tip: 'Monte par la rue Lepic et non par les escaliers : tu croises les locaux faire leur marché et la vue est tout aussi spectaculaire, progressivement.',
-      },
-      {
-        nom: 'Fondation Louis Vuitton',
-        desc: 'Le bâtiment-sculpture de Frank Gehry au milieu du Bois de Boulogne — un chef-d\'œuvre architectural.',
-        pourquoi: 'Même si l\'expo ne t\'intéresse pas, la bâtisse vaut le déplacement. En sortant, prends un verre sur la terrasse.',
-        duree: '1h30', prix: '16€', horaires: 'Jeu-Lun 11h-21h, Mar-Mer fermé',
-        tip: 'Le navette Icart part de l\'Arc de Triomphe pour 2€. En balade dans le Bois après la visite, tu peux longer les berges du lac Supérieur.',
-      },
-      {
-        nom: 'Musée de la Chasse et de la Nature',
-        desc: 'Le musée le plus bizarre et le plus beau de Paris — taxidermie, art contemporain et décors d\'hôtel particulier.',
-        pourquoi: 'Aucun guide ne le met en avant alors que c\'est le coup de cœur unanime de tous ceux qui y vont.',
-        duree: '1h30', prix: '9€', horaires: 'Mar-Dim 11h-18h, fermé lundi',
-        tip: 'Pas besoin de réserver — il n\'est jamais bondé. Le mercredi soir il ouvre jusqu\'à 21h30 avec entrée à prix réduit.',
-      },
+      { nom: 'Cité du Vin', desc: 'Un musée spectaculaire dédié à l\'histoire et à la culture du vin à travers le monde.', pourquoi: 'Pour un voyageur gastronomique, c\'est 3h de voyage dans le temps — incontournable en Nouvelle-Aquitaine.', duree: '3h', prix: '21€', horaires: 'Tlj 10h-18h (19h en été)', tip: 'Le billet inclut un verre de dégustation au 8e étage avec vue panoramique sur Bordeaux. Arrive à l\'ouverture.' },
+      { nom: 'Place de la Bourse', desc: 'Chef-d\'œuvre de l\'architecture classique du XVIIIe, face à la Garonne et son miroir d\'eau.', pourquoi: 'Le miroir d\'eau (le plus grand du monde) crée des reflets magnifiques en soirée — spectaculaire.', duree: '1h', prix: 'Gratuit', horaires: 'Miroir d\'eau : tlj 10h-22h (selon saison)', tip: 'Reviens le soir quand les fontaines se déclenchent toutes les 30 min — le spectacle est magique avec la lumière.' },
+      { nom: 'Rue Sainte-Catherine', desc: 'L\'une des plus longues rues piétonnes d\'Europe, idéale pour flâner entre boutiques et cafés.', pourquoi: 'L\'artère vivante de Bordeaux — pour sentir le pouls de la ville, pas juste les monuments.', duree: 'Demi-journée', prix: 'Gratuit', horaires: 'Accessible 24h/24', tip: 'Tourne dans les petites rues adjacentes (rue Saint-James, rue des Remparts) pour trouver les adresses que les locaux gardent pour eux.' },
+      { nom: 'Quartier Saint-Pierre', desc: 'Le vieux Bordeaux médiéval : ruelles pavées, hôtels particuliers, galeries d\'art indépendantes.', pourquoi: 'Loin des circuits touristiques standards — l\'âme historique de la ville.', duree: '2h', prix: 'Gratuit', horaires: 'Accessible 24h/24', tip: 'Le samedi matin, le marché des Capucins (à 10 min) est l\'endroit où les Bordelais font vraiment leurs courses.' },
     ],
     restaurants: [
-      {
-        nom: 'Bouillon Pigalle',
-        cuisine: 'Cuisine française traditionnelle',
-        budget: '15€/pers',
-        ambiance: 'Grande brasserie 1900 décorée à l\'ancienne — marbre, cuivre, miroirs — toujours bondée et bruyante. C\'est le but.',
-        adresse: '22 Bd de Clichy, Pigalle',
-        tip: 'La file d\'attente paraît longue mais tourne vite : 20-25 min max. Demande le vin en pichet, c\'est 3€ et c\'est honnête.',
-      },
-      {
-        nom: 'Café de la Nouvelle Mairie',
-        cuisine: 'Bistro nature, vins naturels',
-        budget: '22€/pers',
-        ambiance: 'Troquet de quartier minuscule face à une église cachée — boiseries sombres, zinc, carafe de vin nature sur chaque table.',
-        adresse: '19-21 Rue des Fossés-Saint-Jacques, 5e',
-        tip: 'C\'est la cantine de Sciences Po. Arrive à 12h pile ou à 14h, sinon tu n\'auras pas de table. Cartes bancaires acceptées depuis peu.',
-      },
-      {
-        nom: 'Du Pain et des Idées',
-        cuisine: 'Boulangerie artisanale',
-        budget: '8€/pers',
-        ambiance: 'La plus belle boulangerie de Paris dans une boutique de 1875 — plafonds peints, vitrines d\'époque.',
-        adresse: '34 Rue Yves Toudic, Canal Saint-Martin',
-        tip: 'Ouvre à 7h et ferme quand tout est épuisé (vers 14h en semaine, 13h le week-end). Les escargots pistache-chocolat sont légendaires — en rupture dès 10h.',
-      },
-      {
-        nom: 'Septime',
-        cuisine: 'Bistronomie moderne',
-        budget: '65€/pers',
-        ambiance: 'La table la plus désirée de Paris depuis 10 ans — salle en bois brut, lumière naturelle, service sans chichi.',
-        adresse: '80 Rue de Charonne, 11e',
-        tip: 'Le système de réservation ouvre exactement 30 jours à l\'avance à 8h. Connecte-toi à 7h55. Sinon, tente la cave à vins d\'à côté : Septime Cave, sans réservation.',
-      },
-      {
-        nom: 'Marché d\'Aligre',
-        cuisine: 'Marché + troquet',
-        budget: '10€/pers',
-        ambiance: 'Le marché le moins cher de Paris intra-muros — bric-à-brac, fruits, légumes, fromages, olives. Ambiance populaire authentique.',
-        adresse: 'Place d\'Aligre, 12e',
-        tip: 'Ouvert tous les matins sauf lundi, jusqu\'à 13h. Après le marché, prends une planche de charcuterie et un verre au Baron Rouge juste en face : debout sur le trottoir, comme les locaux.',
-      },
+      { nom: 'La Brasserie Bordelaise', cuisine: 'Gastronomie française', budget: '35€/pers', ambiance: 'Cave à vins & brasserie dans les sous-sols en pierre du XVIIIe — ambiance unique, accords mets-vins parfaits.', adresse: '50 Rue Saint-Rémi, Bordeaux', tip: 'Réserve impérativement le soir. Le menu à midi est plus accessible et la qualité identique.' },
+      { nom: 'Le Chien de Pavlov', cuisine: 'Bistronomie nature', budget: '28€/pers', ambiance: 'Le spot des vignerons branchés : vins naturels de Nouvelle-Aquitaine, assiettes créatives, ambiance décontractée.', adresse: '45 Rue du Pas-Saint-Georges', tip: 'La carte change chaque semaine selon les arrivages. Demande au serveur ce qu\'il recommande du terroir — tu auras une réponse sincère.' },
+      { nom: 'Marché des Capucins', cuisine: 'Marché + bouchons', budget: '12€/pers', ambiance: 'Le "ventre de Bordeaux" : huîtres du Bassin, charcuteries, fromages — ambiance marché authentique.', adresse: 'Place des Capucins, Bordeaux', tip: 'Ouvert tous les jours sauf lundi. Arrive avant 9h30 pour les meilleures huîtres fraîchement arrivées du Bassin d\'Arcachon.' },
     ],
     tips: [
-      'Le Pass Navigo semaine (22€) est rentable dès 5 trajets par jour — bien plus logique que le carnet de tickets pour un séjour.',
-      'Le Vélib\' existe depuis 2007 et les Parisiens l\'utilisent vraiment : 30 min gratuites avec l\'abonnement journée à 5€.',
-      'La plupart des grands musées nationaux sont gratuits le premier dimanche du mois. Louvre, Musée d\'Orsay, Versailles : plan en conséquence.',
-      'Les supermarchés Franprix et Monoprix ferment à 22h (parfois 23h). G20 reste ouvert jusqu\'à minuit dans certains quartiers.',
-      'La baguette « tradition » est réglementée par la loi : même prix partout (1,20€ max). La différence entre boulangeries, c\'est la qualité de la farine.',
-      'Évite les restaurants avec photo-menu plastifiée côté Seine et rue de Rivoli — ils sont calibrés pour le tourisme de masse. Deux rues derrière, les prix chutent de 40%.',
-      'Le RER B relie directement CDG Aéroport à la Gare du Nord en 25 min pour 11€20 — pas besoin de taxi à l\'arrivée.',
+      'Le tramway bordelais couvre toute la ville et s\'arrête aux sites touristiques majeurs — journée illimitée à 3€50.',
+      'Le Bassin d\'Arcachon est à 45 min en train. La Dune du Pilat vaut vraiment le détour pour une journée d\'excursion.',
+      'Le Saint-Émilion médiéval est à 40 min en TER — accessible même sans voiture. Marché exceptionnel le dimanche matin.',
+      'Bordeaux est la capitale mondiale du vin : les cavistes proposent des dégustations gratuites ou à 3-5€ — demande à l\'office de tourisme la liste.',
+      'Les musées municipaux (musée des Beaux-Arts, musée d\'Aquitaine) sont gratuits le 1er dimanche du mois.',
     ],
     itineraire: [
       {
-        jour: 1, titre: 'Arrivée & rive gauche',
+        jour: 1, titre: 'Arrivée & cœur historique',
         etapes: [
-          { heure: '14h00', lieu: 'Check-in', duree: '30 min', note: 'Dépose tes bagages et reprends ton énergie.' },
-          { heure: '14h45', lieu: 'Sainte-Chapelle', duree: '1h', note: 'Billet en ligne obligatoire. Le soleil de l\'après-midi traverse les vitraux parfaitement.' },
-          { heure: '16h00', lieu: 'Palais Royal', duree: '1h', note: 'À 10 min à pied. Assieds-toi dans le jardin, observe les Parisiens.' },
-          { heure: '17h30', lieu: 'Café de la Nouvelle Mairie', duree: '1h30', note: 'Verre de vin nature en terrasse — la définition du bonheur parisien.' },
-          { heure: '19h30', lieu: 'Dîner Bouillon Pigalle', duree: '2h', note: 'File d\'attente 20 min, puis une expérience brasserie authentique à prix honnête.' },
+          { heure: '14h00', lieu: 'Check-in', duree: '30 min', note: 'Conseillé : s\'installer dans le quartier Saint-Pierre pour être au cœur de tout.' },
+          { heure: '15h00', lieu: 'Place de la Bourse', duree: '1h', note: 'Commence par le miroir d\'eau — spectaculaire en arrivant.' },
+          { heure: '16h30', lieu: 'Quartier Saint-Pierre', duree: '2h', note: 'Flâne dans les ruelles, entre dans les galeries, observe l\'architecture.' },
+          { heure: '19h30', lieu: 'Dîner Marché des Capucins', duree: '2h', note: 'Si tu arrives un soir de semaine, les bouchons autour sont ouverts jusqu\'à 22h.' },
         ]
       },
       {
-        jour: 2, titre: 'Musées & canal',
+        jour: 2, titre: 'Vin & terroir',
         etapes: [
-          { heure: '08h00', lieu: 'Du Pain et des Idées', duree: '30 min', note: 'Escargot pistache-chocolat. Arrive tôt ou c\'est complet.' },
-          { heure: '09h30', lieu: 'Musée d\'Orsay', duree: '2h30', note: 'Billet en ligne. Impressionnistes au 5e étage d\'abord — moins de monde le matin.' },
-          { heure: '12h30', lieu: 'Canal Saint-Martin', duree: '1h30', note: 'Flâne le long du canal, assieds-toi sur une écluse. Vrai Paris local.' },
-          { heure: '14h30', lieu: 'Le Marais — rue de Bretagne', duree: '2h', note: 'Marché des Enfants-Rouges si encore ouvert, sinon galeries et boutiques indépendantes.' },
-          { heure: '19h30', lieu: 'Dîner Septime ou cave', duree: '2h', note: 'Si réservation Septime : fonce. Sinon, la cave d\'à côté sans réservation est excellente.' },
+          { heure: '10h00', lieu: 'Cité du Vin', duree: '3h', note: 'Billet en ligne. Commence par le 8e étage pour la vue, puis descends les niveaux.' },
+          { heure: '14h00', lieu: 'Rue Sainte-Catherine', duree: '2h', note: 'Shopping ou simple flânerie — l\'ambiance est très différente selon l\'heure.' },
+          { heure: '17h00', lieu: 'Dégustation en cave', duree: '1h30', note: 'La Vinothèque de Bordeaux ou l\'École du Vin — tarifs à partir de 15€.' },
+          { heure: '19h30', lieu: 'Le Chien de Pavlov', duree: '2h', note: 'Réserve à l\'avance. Accords vins naturels locaux absolument remarquables.' },
         ]
       },
     ]
   }
 };
 
-// Pour les villes sans mock data, on renvoie Paris
 function getMockData(ville) {
-  return MOCK_DATA[ville] || MOCK_DATA.paris;
+  return MOCK_DATA[ville] || MOCK_DATA.bordeaux;
 }
 
 // ── ÉTAT ──────────────────────────────────────────────────────
 let state = {
   ville: null,
+  villeLabel: null,
   currentQ: 0,
   reponses: {},
-  contraintes: [],
+  multi: {},
   sauvegardes: new Set(),
 };
 
@@ -608,86 +684,86 @@ function showPage(id) {
   window.scrollTo(0, 0);
 }
 
-// ── LANDING ───────────────────────────────────────────────────
-function choisirVille(slug) {
+// ── DESTINATION ───────────────────────────────────────────────
+function choisirVille(slug, label) {
   state.ville = slug;
+  state.villeLabel = label;
   reinitQuestionnaire();
   showPage('questionnaire');
-}
-
-function lancerQuestionnaire() {
-  const raw = document.getElementById('dest-input').value.trim().toLowerCase();
-  const slug = VILLES_MAPPING[raw];
-  const errEl = document.getElementById('dest-error');
-  if (!slug) {
-    errEl.textContent = 'Disponible : Paris · Lyon · Marseille · Bordeaux · Nice';
-    errEl.classList.remove('hidden');
-    return;
-  }
-  errEl.classList.add('hidden');
-  choisirVille(slug);
 }
 
 // ── QUESTIONNAIRE ─────────────────────────────────────────────
 function reinitQuestionnaire() {
   state.currentQ = 0;
   state.reponses = {};
-  state.contraintes = [];
+  state.multi = {};
+  ACTIVE_QUESTIONS = [...QUESTIONS_BASE];
   renderQuestion();
 }
 
 function renderQuestion() {
-  const q = QUESTIONS[state.currentQ];
-  const total = QUESTIONS.length;
+  const q = ACTIVE_QUESTIONS[state.currentQ];
+  const total = ACTIVE_QUESTIONS.length;
   const progression = ((state.currentQ + 1) / total) * 100;
 
   document.getElementById('progress-bar').style.width = progression + '%';
   document.getElementById('q-header-info').textContent =
-    (VILLES_LABELS[state.ville] || state.ville) + ' · ' + (state.currentQ + 1) + '/' + total;
+    (state.villeLabel || '') + ' · ' + (state.currentQ + 1) + '/' + total;
 
   // Dots
-  document.getElementById('dots-container').innerHTML = QUESTIONS.map((_, i) => `
-    <div class="h-1.5 rounded-full transition-all duration-300" style="
+  document.getElementById('dots-container').innerHTML = ACTIVE_QUESTIONS.map((_, i) => `
+    <div style="
+      height:6px; border-radius:3px; transition: all 0.3s;
       width: ${i === state.currentQ ? '24px' : '6px'};
-      background: ${i === state.currentQ ? '#1F0C06' : i < state.currentQ ? '#F44839' : 'rgba(31,12,6,0.1)'};
+      background: ${i === state.currentQ ? '#0f414a' : i < state.currentQ ? '#7f0303' : 'rgba(15,65,74,0.1)'};
     "></div>
   `).join('');
 
-  // Navigation buttons
-  document.getElementById('btn-precedent').classList.toggle('invisible', state.currentQ === 0);
+  // Navigation
+  const btnPrev = document.getElementById('btn-precedent');
+  btnPrev.style.visibility = state.currentQ === 0 ? 'hidden' : 'visible';
   const btnSuiv = document.getElementById('btn-suivant');
-  if (q.multi || state.currentQ === total - 1) {
+  const isLastQ = state.currentQ === ACTIVE_QUESTIONS.length - 1;
+  if (q.multi || isLastQ) {
     btnSuiv.classList.remove('hidden');
-    btnSuiv.textContent = 'Découvrir →';
+    btnSuiv.textContent = isLastQ ? 'Découvrir →' : 'Suivant →';
     updateSuivantState();
   } else {
     btnSuiv.classList.add('hidden');
   }
 
-  // Question content
-  const gridCols = q.options.length === 3 ? 'grid-cols-3' : 'grid-cols-2';
-  const container = document.getElementById('question-container');
-  container.innerHTML = `
+  // Grid columns
+  const n = q.options.length;
+  const cols = n <= 4 ? (n === 3 ? 'grid-cols-3' : 'grid-cols-2')
+             : n <= 6 ? 'grid-cols-2 sm:grid-cols-3'
+             : 'grid-cols-3';
+
+  const currentMulti = state.multi[q.id] || [];
+  const maxReached = q.maxSelect && currentMulti.filter(v => v !== 'aucune').length >= q.maxSelect;
+
+  document.getElementById('question-container').innerHTML = `
     <div class="question-slide">
       <div class="mb-10 text-center">
-        <h2 class="font-display font-bold text-marron mb-3 leading-tight" style="font-size: clamp(1.75rem, 5vw, 2.5rem);">${q.question}</h2>
-        ${q.subtitle ? `<p class="text-marron/60 text-base">${q.subtitle}</p>` : ''}
+        <h2 class="font-display font-bold text-bleuinuit mb-3 leading-tight" style="font-size: clamp(1.75rem, 5vw, 2.5rem);">${q.question}</h2>
+        ${q.subtitle ? `<p style="color:rgba(15,65,74,0.6);">${q.subtitle}</p>` : ''}
       </div>
-      <div class="grid ${gridCols} gap-3">
+      <div class="grid ${cols} gap-3">
         ${q.options.map(opt => {
           const isSelected = q.multi
-            ? state.contraintes.includes(opt.value)
+            ? currentMulti.includes(opt.value)
             : state.reponses[q.id] === opt.value;
+          const isDisabled = q.multi && q.maxSelect && !isSelected && maxReached && opt.value !== 'aucune';
           return `
             <button
-              onclick="selectOption('${q.id}', '${opt.value}', ${!!q.multi})"
-              class="option-card ${isSelected ? 'selected' : ''} flex flex-col items-center gap-3 rounded-2xl border-2 p-5 text-center focus:outline-none"
-              style="${isSelected ? '' : 'border-color: rgba(31,12,6,0.15); background: white;'}"
+              onclick="selectOption('${q.id}', '${opt.value}', ${!!q.multi}, ${q.maxSelect || 0})"
+              class="option-card ${isSelected ? 'selected' : ''} flex flex-col items-center gap-3 rounded-2xl p-5 text-center focus:outline-none"
+              style="${isDisabled ? 'opacity:0.4; cursor:not-allowed;' : 'cursor:pointer;'} ${isSelected ? 'background:#0f414a; color:#efe8df; border-color:#0f414a;' : ''}"
+              ${isDisabled ? 'disabled' : ''}
             >
               <span class="text-3xl leading-none">${opt.icon}</span>
               <div>
-                <div class="opt-label font-medium text-base leading-tight text-marron">${opt.label}</div>
-                <div class="opt-desc mt-1 text-xs leading-snug text-marron/60">${opt.desc}</div>
+                <div class="opt-label font-medium text-base leading-tight" style="${isSelected ? 'color:#efe8df;' : 'color:#0f414a;'}">${opt.label}</div>
+                ${opt.desc ? `<div class="opt-desc mt-1 text-xs leading-snug" style="${isSelected ? 'color:rgba(239,232,223,0.65);' : 'color:rgba(15,65,74,0.6);'}">${opt.desc}</div>` : ''}
               </div>
             </button>
           `;
@@ -697,34 +773,42 @@ function renderQuestion() {
   `;
 }
 
-function selectOption(questionId, value, isMulti) {
+function selectOption(questionId, value, isMulti, maxSelect) {
   if (isMulti) {
+    const current = state.multi[questionId] || [];
     if (value === 'aucune') {
-      state.contraintes = ['aucune'];
+      state.multi[questionId] = current.includes('aucune') ? [] : ['aucune'];
     } else {
-      state.contraintes = state.contraintes.filter(v => v !== 'aucune');
-      const idx = state.contraintes.indexOf(value);
-      if (idx >= 0) state.contraintes.splice(idx, 1);
-      else state.contraintes.push(value);
+      const filtered = current.filter(v => v !== 'aucune');
+      const idx = filtered.indexOf(value);
+      if (idx >= 0) {
+        state.multi[questionId] = filtered.filter(v => v !== value);
+      } else {
+        if (maxSelect > 0 && filtered.length >= maxSelect) return;
+        state.multi[questionId] = [...filtered, value];
+      }
     }
+    if (questionId === 'contraintes') buildActiveQuestions();
     updateSuivantState();
     renderQuestion();
     return;
   }
   state.reponses[questionId] = value;
   renderQuestion();
-  if (state.currentQ < QUESTIONS.length - 1) {
+  if (state.currentQ < ACTIVE_QUESTIONS.length - 1) {
     setTimeout(() => { state.currentQ++; renderQuestion(); }, 220);
   }
 }
 
 function updateSuivantState() {
   const btnSuiv = document.getElementById('btn-suivant');
-  const q = QUESTIONS[state.currentQ];
-  const hasValue = q.multi ? state.contraintes.length > 0 : !!state.reponses[q.id];
+  const q = ACTIVE_QUESTIONS[state.currentQ];
+  const hasValue = q.multi
+    ? (state.multi[q.id] || []).length > 0
+    : !!state.reponses[q.id];
   btnSuiv.disabled = !hasValue;
   btnSuiv.style.opacity = hasValue ? '1' : '0.4';
-  btnSuiv.style.pointerEvents = hasValue ? 'auto' : 'none';
+  btnSuiv.style.cursor = hasValue ? 'pointer' : 'not-allowed';
 }
 
 function precedent() {
@@ -732,7 +816,7 @@ function precedent() {
 }
 
 function suivant() {
-  if (state.currentQ === QUESTIONS.length - 1) lancerCuration();
+  if (state.currentQ === ACTIVE_QUESTIONS.length - 1) lancerCuration();
   else { state.currentQ++; renderQuestion(); }
 }
 
@@ -740,10 +824,10 @@ function suivant() {
 function lancerCuration() {
   showPage('loading');
   const msgs = [
-    'Claude analyse ton profil…',
+    'Claude analyse votre profil…',
     'Sélection des meilleures adresses locales…',
-    'Filtrage selon ton budget et style…',
-    'Préparation de ton starter pack…',
+    'Filtrage selon votre budget et vos envies…',
+    'Préparation de votre starter pack…',
   ];
   let i = 0;
   const el = document.getElementById('loading-msg');
@@ -753,14 +837,13 @@ function lancerCuration() {
 
 // ── RÉSULTATS ─────────────────────────────────────────────────
 function afficherResultats() {
-  const villeLabel = VILLES_LABELS[state.ville] || 'Paris';
   const data = getMockData(state.ville);
   state.sauvegardes = new Set();
 
-  document.getElementById('res-ville-label').textContent = villeLabel;
-  document.getElementById('res-titre').textContent = 'Votre ' + villeLabel;
-  document.getElementById('res-hero').style.background = VILLE_GRADIENTS[state.ville] || VILLE_GRADIENTS.paris;
-  document.getElementById('nb-lieux').textContent = data.incontournables.length + ' lieux curatés pour ton profil';
+  document.getElementById('res-ville-label').textContent = state.villeLabel || 'Bordeaux';
+  document.getElementById('res-titre').textContent = 'Votre ' + (state.villeLabel || 'Bordeaux');
+  document.getElementById('res-hero').style.background = VILLE_GRADIENTS[state.ville] || VILLE_GRADIENTS.bordeaux;
+  document.getElementById('nb-lieux').textContent = data.incontournables.length + ' lieux curatés pour votre profil';
   document.getElementById('nb-restos').textContent = data.restaurants.length + ' restaurants sélectionnés';
 
   renderLieux(data.incontournables);
@@ -768,45 +851,43 @@ function afficherResultats() {
   renderTips(data.tips);
   renderItineraire(data.itineraire);
   updateSauvegardeCounts();
-
   showPage('resultats');
 }
 
 function renderLieux(lieux) {
   const gradients = [
-    'linear-gradient(135deg,#F5EDE3,#EDE8E3)',
-    'linear-gradient(135deg,#E8F0F5,#D6DFE8)',
-    'linear-gradient(135deg,#EFF5E8,#E0EBD5)',
-    'linear-gradient(135deg,#F5F0E8,#EDE8DD)',
-    'linear-gradient(135deg,#F5EEEA,#EADFD8)',
+    'linear-gradient(135deg,#efe8df,#d8ba98)',
+    'linear-gradient(135deg,#d8ba98,#96c0ce)',
+    'linear-gradient(135deg,#96c0ce,#efe8df)',
+    'linear-gradient(135deg,#efe8df,#96c0ce)',
   ];
   document.getElementById('lieux-grid').innerHTML = lieux.map((l, idx) => `
-    <div class="bg-white rounded-2xl border border-marron/10 overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+    <div class="bg-white rounded-2xl overflow-hidden transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style="border:1px solid rgba(15,65,74,0.1);">
       <div class="h-36 relative flex items-center justify-center" style="background:${gradients[idx % gradients.length]}">
-        <span class="text-4xl opacity-60">📍</span>
+        <span class="text-4xl" style="opacity:0.6;">📍</span>
         <button
           onclick="toggleSauvegarde('${l.nom.replace(/'/g,"\\'")}', this)"
-          class="heart-btn absolute top-3 right-3 h-8 w-8 rounded-full flex items-center justify-center shadow-sm transition-all"
-          style="background: rgba(255,255,255,0.9); color: rgba(31,12,6,0.5);"
+          class="heart-btn absolute top-3 right-3 h-8 w-8 rounded-full flex items-center justify-center shadow-sm"
+          style="background:rgba(255,255,255,0.9); color:rgba(15,65,74,0.5); border:none; cursor:pointer;"
         >♡</button>
       </div>
       <div class="p-4">
         <div class="flex items-start justify-between gap-2 mb-2">
-          <h3 class="font-display font-bold text-lg text-marron leading-tight">${l.nom}</h3>
-          <span class="text-xs rounded-full px-3 py-1 whitespace-nowrap flex-shrink-0" style="background:rgba(31,12,6,0.05); color:rgba(31,12,6,0.6);">${l.duree}</span>
+          <h3 class="font-display font-bold text-lg text-bleuinuit leading-tight">${l.nom}</h3>
+          <span class="text-xs rounded-full px-3 py-1 whitespace-nowrap flex-shrink-0" style="background:rgba(15,65,74,0.05); color:rgba(15,65,74,0.6);">${l.duree}</span>
         </div>
-        <p class="text-sm text-marron/60 mb-3 leading-relaxed">${l.desc}</p>
-        <div class="flex items-center gap-3 text-xs text-marron/50 mb-3">
+        <p class="text-sm mb-3 leading-relaxed" style="color:rgba(15,65,74,0.6);">${l.desc}</p>
+        <div class="flex items-center gap-3 text-xs mb-3" style="color:rgba(15,65,74,0.5);">
           <span>💶 ${l.prix}</span>
           <span class="truncate">🕐 ${l.horaires}</span>
         </div>
-        <div class="rounded-xl p-3 mb-3" style="background: rgba(244,72,57,0.08);">
-          <p class="text-xs font-medium leading-relaxed" style="color:#F44839;">✦ ${l.pourquoi}</p>
+        <div class="rounded-xl p-3 mb-3" style="background:rgba(127,3,3,0.08);">
+          <p class="text-xs font-medium leading-relaxed" style="color:#7f0303;">✦ ${l.pourquoi}</p>
         </div>
-        <button onclick="toggleTip(this)" class="text-xs text-marron/50 hover:text-marron transition-colors underline underline-offset-2">
+        <button onclick="toggleTip(this)" class="text-xs transition-colors underline underline-offset-2" style="color:rgba(15,65,74,0.5); background:none; border:none; cursor:pointer;">
           💡 Voir le tip local
         </button>
-        <div class="tip-content hidden mt-2 text-xs text-marron rounded-lg p-3 leading-relaxed" style="background:rgba(31,12,6,0.05);">
+        <div class="tip-content hidden mt-2 text-xs text-bleuinuit rounded-lg p-3 leading-relaxed" style="background:rgba(15,65,74,0.05);">
           ${l.tip}
         </div>
       </div>
@@ -816,27 +897,27 @@ function renderLieux(lieux) {
 
 function renderRestaurants(restos) {
   document.getElementById('restos-grid').innerHTML = restos.map(r => `
-    <div class="bg-white rounded-2xl border border-marron/10 p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+    <div class="bg-white rounded-2xl p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5" style="border:1px solid rgba(15,65,74,0.1);">
       <div class="flex items-start justify-between mb-3">
         <div class="flex-1 min-w-0">
-          <h3 class="font-display font-bold text-lg text-marron leading-tight mb-2">${r.nom}</h3>
+          <h3 class="font-display font-bold text-lg text-bleuinuit leading-tight mb-2">${r.nom}</h3>
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs rounded-full px-3 py-1" style="background:rgba(244,72,57,0.1); color:#F44839;">${r.cuisine}</span>
-            <span class="text-xs rounded-full px-3 py-1" style="background:rgba(31,12,6,0.05); color:rgba(31,12,6,0.6);">${r.budget}</span>
+            <span class="text-xs rounded-full px-3 py-1" style="background:rgba(127,3,3,0.1); color:#7f0303;">${r.cuisine}</span>
+            <span class="text-xs rounded-full px-3 py-1" style="background:rgba(15,65,74,0.05); color:rgba(15,65,74,0.6);">${r.budget}</span>
           </div>
         </div>
         <button
           onclick="toggleSauvegarde('${r.nom.replace(/'/g,"\\'")}', this)"
-          class="heart-btn ml-3 h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
-          style="background:rgba(31,12,6,0.05); color:rgba(31,12,6,0.5);"
+          class="heart-btn ml-3 h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0"
+          style="background:rgba(15,65,74,0.05); color:rgba(15,65,74,0.5); border:none; cursor:pointer;"
         >♡</button>
       </div>
-      <p class="text-sm text-marron/60 mb-3 leading-relaxed">${r.ambiance}</p>
-      <p class="text-xs text-marron/50 mb-3">📍 ${r.adresse}</p>
-      <button onclick="toggleTip(this)" class="text-xs text-marron/50 hover:text-marron transition-colors underline underline-offset-2">
+      <p class="text-sm mb-3 leading-relaxed" style="color:rgba(15,65,74,0.6);">${r.ambiance}</p>
+      <p class="text-xs mb-3" style="color:rgba(15,65,74,0.5);">📍 ${r.adresse}</p>
+      <button onclick="toggleTip(this)" class="text-xs transition-colors underline underline-offset-2" style="color:rgba(15,65,74,0.5); background:none; border:none; cursor:pointer;">
         💡 Astuce réservation
       </button>
-      <div class="tip-content hidden mt-2 text-xs text-marron rounded-lg p-3 leading-relaxed" style="background:rgba(31,12,6,0.05);">
+      <div class="tip-content hidden mt-2 text-xs text-bleuinuit rounded-lg p-3 leading-relaxed" style="background:rgba(15,65,74,0.05);">
         ${r.tip}
       </div>
     </div>
@@ -844,9 +925,9 @@ function renderRestaurants(restos) {
 }
 
 function renderTips(tips) {
-  document.getElementById('tips-grid').innerHTML = tips.map((tip, i) => `
-    <div class="bg-white rounded-2xl border border-marron/10 p-4 flex items-start gap-3 hover:shadow-sm transition-shadow">
-      <p class="text-sm text-marron leading-relaxed">${tip}</p>
+  document.getElementById('tips-grid').innerHTML = tips.map(tip => `
+    <div class="bg-white rounded-2xl p-4 flex items-start gap-3 hover:shadow-sm transition-shadow" style="border:1px solid rgba(15,65,74,0.1);">
+      <p class="text-sm text-bleuinuit leading-relaxed">${tip}</p>
     </div>
   `).join('');
 }
@@ -855,24 +936,24 @@ function renderItineraire(jours) {
   document.getElementById('itineraire-container').innerHTML = jours.map(j => `
     <div class="mb-8">
       <div class="flex items-center gap-3 mb-4">
-        <div class="h-8 w-8 rounded-full bg-marron text-blanc text-sm font-medium flex items-center justify-center flex-shrink-0">${j.jour}</div>
-        <h3 class="font-display font-bold text-xl text-marron">${j.titre}</h3>
+        <div class="h-8 w-8 rounded-full text-sm font-medium flex items-center justify-center flex-shrink-0" style="background:#0f414a; color:#d8ba98;">${j.jour}</div>
+        <h3 class="font-display font-bold text-xl text-bleuinuit">${j.titre}</h3>
       </div>
       <div class="relative pl-10">
-        <div class="absolute top-0 bottom-0 bg-marron/10" style="left:16px; width:1px;"></div>
+        <div class="absolute top-0 bottom-0" style="left:16px; width:1px; background:rgba(15,65,74,0.1);"></div>
         <div class="space-y-3">
           ${j.etapes.map(e => `
             <div class="relative">
-              <div class="absolute rounded-full bg-rouge border-2" style="left:-24px; top:14px; height:8px; width:8px; border-color:#FEFAEF;"></div>
-              <div class="bg-white rounded-xl border border-marron/10 p-4">
+              <div class="absolute rounded-full" style="left:-24px; top:14px; height:8px; width:8px; background:#7f0303; border:2px solid #efe8df;"></div>
+              <div class="bg-white rounded-xl p-4" style="border:1px solid rgba(15,65,74,0.1);">
                 <div class="flex items-start gap-3">
                   <div class="text-right min-w-[52px] flex-shrink-0">
-                    <div class="text-sm font-medium text-marron">${e.heure}</div>
-                    <div class="text-xs text-marron/50">${e.duree}</div>
+                    <div class="text-sm font-medium text-bleuinuit">${e.heure}</div>
+                    <div class="text-xs" style="color:rgba(15,65,74,0.5);">${e.duree}</div>
                   </div>
                   <div>
-                    <div class="font-medium text-marron text-sm">${e.lieu}</div>
-                    <p class="text-xs text-marron/60 mt-1 leading-relaxed">${e.note}</p>
+                    <div class="font-medium text-sm text-bleuinuit">${e.lieu}</div>
+                    <p class="text-xs mt-1 leading-relaxed" style="color:rgba(15,65,74,0.6);">${e.note}</p>
                   </div>
                 </div>
               </div>
@@ -901,8 +982,8 @@ function toggleSauvegarde(nom, btn) {
     state.sauvegardes.delete(nom);
     btn.textContent = '♡';
     btn.classList.remove('saved');
-    btn.style.background = '';
-    btn.style.color = '';
+    btn.style.background = 'rgba(255,255,255,0.9)';
+    btn.style.color = 'rgba(15,65,74,0.5)';
   } else {
     state.sauvegardes.add(nom);
     btn.textContent = '♥';
@@ -920,10 +1001,12 @@ function updateSauvegardeCounts() {
 function scrollToSection(id, btn) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   document.querySelectorAll('.nav-tab').forEach(t => {
-    t.className = 'nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all text-marron/50 hover:text-marron hover:bg-marron/5';
+    t.style.background = 'none';
+    t.style.color = 'rgba(15,65,74,0.5)';
   });
   if (btn) {
-    btn.className = 'nav-tab flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all bg-marron text-blanc';
+    btn.style.background = '#0f414a';
+    btn.style.color = '#d8ba98';
   }
 }
 
@@ -932,10 +1015,22 @@ function exporterMaps() {
   const lieux = state.sauvegardes.size > 0
     ? [...state.sauvegardes]
     : data.incontournables.slice(0, 4).map(l => l.nom);
-  const ville = VILLES_LABELS[state.ville] || 'Paris';
+  const ville = state.villeLabel || 'Bordeaux';
   const encoded = lieux.map(l => encodeURIComponent(l + ', ' + ville)).join('/');
   window.open('https://www.google.com/maps/dir/' + encoded, '_blank');
 }
+
+// ── City card hover effect ─────────────────────────────────────
+document.querySelectorAll('.city-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.borderColor = 'rgba(127,3,3,0.4)';
+    card.style.background = 'rgba(15,65,74,0.05)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.borderColor = 'rgba(15,65,74,0.15)';
+    card.style.background = 'white';
+  });
+});
 
 </script>
 </body>
