@@ -50,8 +50,12 @@
 
     /* ── Ticker marquee ── */
     .ticker-wrap { display: flex; white-space: nowrap; animation: marquee 35s linear infinite; }
-    .ticker-text { font-family: 'Outfit', sans-serif; font-size: 0.875rem; color: #d8ba98; letter-spacing: 0.05em; padding: 0 24px; }
+    .ticker-text { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #d8ba98; padding: 0 32px; }
     @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── Cursor blink ── */
+    .cursor-blink { display: inline-block; width: 2px; height: 0.9em; background: #7f0303; margin-left: 2px; vertical-align: middle; animation: cursorBlink 0.75s step-end infinite; }
+    @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     /* ── Step cards hover ── */
     .step-card { cursor: default; transition: transform 0.3s ease, box-shadow 0.3s ease; }
@@ -98,30 +102,27 @@
   <section class="px-4 sm:px-8 pb-8">
     <div class="grain relative w-full overflow-hidden rounded-4xl sm:rounded-5xl" style="height: clamp(480px, 78vh, 820px);">
 
-      <img
-        src="https://images.pexels.com/photos/14466528/pexels-photo-14466528.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop"
-        alt="Village de Rocamadour"
-        class="absolute inset-0 w-full h-full object-cover"
-        style="filter: blur(1px) brightness(0.82);"
-      />
-      <div class="absolute inset-0 z-[1]" style="background: linear-gradient(to top, rgba(15,65,74,0.88) 0%, rgba(15,65,74,0.2) 55%, transparent 100%);"></div>
+      <!-- Slideshow : 2 imgs alternées en crossfade -->
+      <img id="hero-img-a" class="absolute inset-0 w-full h-full object-cover" style="opacity:1; transition:opacity 1s ease;" />
+      <img id="hero-img-b" class="absolute inset-0 w-full h-full object-cover" style="opacity:0; transition:opacity 1s ease;" />
 
-      <div class="relative z-[2] h-full flex flex-col justify-between p-7 sm:p-12">
+      <!-- Overlay crème légère -->
+      <div class="absolute inset-0 z-[1]" style="background: rgba(239,232,223,0.42);"></div>
 
-        <!-- Badge -->
-        <div class="self-start inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium"
-          style="background: rgba(216,186,152,0.18); border: 1px solid rgba(216,186,152,0.35); color: #d8ba98;">
-          <span>🌿</span>
-          <span>12 destinations · Nouvelle-Aquitaine</span>
-        </div>
+      <!-- Crédit photo — bas droite -->
+      <div class="absolute z-[3]" style="bottom:16px; right:20px;">
+        <span id="hero-credit" style="font-size:10px; font-family:'Outfit',sans-serif; padding:2px 8px; border-radius:999px; background:rgba(15,65,74,0.35); color:#efe8df;"></span>
+      </div>
 
-        <!-- Bas du hero -->
+      <!-- Contenu -->
+      <div class="relative z-[2] h-full flex flex-col justify-end p-7 sm:p-12">
         <div class="max-w-2xl">
-          <h1 class="font-display font-black leading-[1.05] mb-4" style="color:#efe8df; font-size: clamp(2rem, 5vw, 3.75rem);">
+          <h1 class="font-display font-black leading-[1.05] mb-5" style="color:#7f0303; font-size: clamp(2rem, 5vw, 3.75rem);">
             La plus belle destination du monde est à 2h de chez vous.
           </h1>
-          <p class="text-base sm:text-lg mb-8 leading-relaxed max-w-lg" style="color: rgba(239,232,223,0.7);">
-            On cure le meilleur de la Nouvelle-Aquitaine selon votre profil. Comme un ami bien renseigné, en 2 minutes.
+          <p class="text-base sm:text-lg mb-8 leading-relaxed max-w-lg" style="color: rgba(127,3,3,0.8);">
+            Créez votre itinéraire idéal selon vos envies pour
+            <span style="font-weight:600;"><span id="typewriter-text"></span><span class="cursor-blink"></span></span>
           </p>
 
           <!-- 2 CTAs côte à côte -->
@@ -129,8 +130,8 @@
             <button
               onclick="showPage('destination')"
               class="flex-1 px-6 py-3.5 rounded-full text-sm font-semibold transition-all text-center"
-              style="background:#d8ba98; color:#0f414a;"
-              onmouseover="this.style.filter='brightness(1.05)'" onmouseout="this.style.filter=''"
+              style="background:#0f414a; color:#d8ba98;"
+              onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''"
             >
               Je sais où je vais →
             </button>
@@ -138,7 +139,7 @@
               disabled
               title="Bientôt disponible"
               class="flex-1 px-6 py-3.5 rounded-full text-sm font-medium cursor-not-allowed text-center flex items-center justify-center gap-2"
-              style="border: 1px solid rgba(239,232,223,0.2); color: rgba(239,232,223,0.35);"
+              style="border: 1px solid rgba(15,65,74,0.2); color: rgba(15,65,74,0.3);"
             >
               <span>Quelle destination me correspondrait ?</span>
               <span style="font-size:0.7rem; opacity:0.6; white-space:nowrap;">Bientôt</span>
@@ -147,7 +148,6 @@
         </div>
       </div>
     </div>
-    <p class="text-right mt-1.5 pr-2" style="font-size:10px; color:rgba(15,65,74,0.3);">Photo : Rocamadour, Lot · Pexels</p>
   </section>
 
   <!-- COMMENT ÇA MARCHE -->
@@ -190,16 +190,17 @@
   </section>
 
   <!-- TICKER DÉFILANT -->
-  <div style="background:#0f414a; padding:16px 0; overflow:hidden;">
+  <div style="background:#0f414a; padding:20px 0; overflow:hidden;">
     <div class="ticker-wrap">
-      <span class="ticker-text">Nouvelle-Aquitaine · Bordeaux · Biarritz · Sarlat-la-Canéda · La Rochelle · Angoulême · Limoges · Dax · Niort · Poitiers · Agen · Aubusson · Brive-la-Gaillarde · </span>
-      <span class="ticker-text">Nouvelle-Aquitaine · Bordeaux · Biarritz · Sarlat-la-Canéda · La Rochelle · Angoulême · Limoges · Dax · Niort · Poitiers · Agen · Aubusson · Brive-la-Gaillarde · </span>
+      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France </span>
+      <span class="ticker-text">— Préparez votre escapade parmi 12 villes de France </span>
     </div>
   </div>
 
   <!-- SECTION CARTE POSTALE -->
-  <section style="padding:64px 16px; background: repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 18px, #96c0ce 18px, #96c0ce 22px);">
-    <div class="max-w-2xl mx-auto rounded-4xl shadow-xl p-10 sm:p-14" style="background:white;">
+  <section style="padding:64px 16px; background: repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 35px, #96c0ce 35px, #96c0ce 65px);">
+    <div class="w-full rounded-2xl shadow-xl p-10 sm:p-14" style="background:white;">
+      <div class="max-w-2xl mx-auto">
       <div class="text-center mb-10">
         <div class="font-display text-2xl font-bold text-bleuinuit">Escale</div>
         <p class="text-sm mt-1" style="color:rgba(15,65,74,0.5);">L'ami bien renseigné pour la Nouvelle-Aquitaine</p>
@@ -231,6 +232,7 @@
       </div>
 
       <p class="text-center text-xs" style="color:rgba(15,65,74,0.3);">© 2026 Escale — fait avec passion par Céline</p>
+      </div>
     </div>
   </section>
 
@@ -480,6 +482,97 @@
      SCRIPT
 ═══════════════════════════════════════════════════════════ -->
 <script>
+
+// ── PHOTOS SLIDESHOW ──────────────────────────────────────────
+const PHOTOS = [
+  { url: 'https://images.pexels.com/photos/30732709/pexels-photo-30732709.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Bordeaux · Pexels' },
+  { url: 'https://images.pexels.com/photos/15433187/pexels-photo-15433187.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Biarritz · Pexels' },
+  { url: 'https://images.pexels.com/photos/2661942/pexels-photo-2661942.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',    credit: 'La Rochelle · Pexels' },
+  { url: 'https://images.pexels.com/photos/14466528/pexels-photo-14466528.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Rocamadour · Pexels' },
+  { url: 'https://images.pexels.com/photos/14285453/pexels-photo-14285453.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Dordogne · Pexels' },
+  { url: 'https://images.pexels.com/photos/31707246/pexels-photo-31707246.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Marais Poitevin · Pexels' },
+  { url: 'https://images.pexels.com/photos/30840855/pexels-photo-30840855.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Dune du Pilat · Pexels' },
+  { url: 'https://images.pexels.com/photos/14284405/pexels-photo-14284405.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Lot-et-Garonne · Pexels' },
+  { url: 'https://images.pexels.com/photos/12018969/pexels-photo-12018969.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Charente · Pexels' },
+  { url: 'https://images.pexels.com/photos/19189209/pexels-photo-19189209.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Nouvelle-Aquitaine · Pexels' },
+  { url: 'https://images.pexels.com/photos/33343359/pexels-photo-33343359.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Nouvelle-Aquitaine · Pexels' },
+  { url: 'https://images.pexels.com/photos/19047688/pexels-photo-19047688.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Poitiers · Pexels' },
+];
+
+let heroIndex = 0;
+let heroActive = 'a';
+
+function initSlideshow() {
+  const imgA = document.getElementById('hero-img-a');
+  const imgB = document.getElementById('hero-img-b');
+  const credit = document.getElementById('hero-credit');
+  if (!imgA) return;
+
+  // Charge les 2 premières photos
+  imgA.src = PHOTOS[0].url;
+  imgB.src = PHOTOS[1].url;
+  credit.textContent = PHOTOS[0].credit;
+
+  setInterval(() => {
+    heroIndex = (heroIndex + 1) % PHOTOS.length;
+    const nextIndex = (heroIndex + 1) % PHOTOS.length;
+    const incomingId = heroActive === 'a' ? 'b' : 'a';
+    const outgoingId = heroActive;
+    const incoming = document.getElementById('hero-img-' + incomingId);
+    const outgoing = document.getElementById('hero-img-' + outgoingId);
+
+    // Précharge la prochaine photo dans l'img cachée
+    incoming.src = PHOTOS[nextIndex].url;
+
+    // Affiche l'img déjà chargée (l'ancienne "next")
+    outgoing.style.opacity = '0';
+
+    // On fade vers incoming (qui a la photo de heroIndex)
+    const showIncoming = document.getElementById('hero-img-' + incomingId);
+    showIncoming.src = PHOTOS[heroIndex].url;
+    showIncoming.style.opacity = '1';
+
+    credit.textContent = PHOTOS[heroIndex].credit;
+    heroActive = incomingId;
+  }, 5000);
+}
+
+// ── TYPEWRITER ─────────────────────────────────────────────────
+const CYCLING_PHRASES = [
+  'votre week-end en amoureux',
+  'vos vacances en famille',
+  'votre virée improvisée entre amis',
+];
+
+let twPhraseIdx = 0;
+let twDisplayed = '';
+let twTyping = true;
+
+function stepTypewriter() {
+  const phrase = CYCLING_PHRASES[twPhraseIdx];
+  const el = document.getElementById('typewriter-text');
+  if (!el) return;
+
+  if (twTyping) {
+    if (twDisplayed.length < phrase.length) {
+      twDisplayed = phrase.slice(0, twDisplayed.length + 1);
+      el.textContent = twDisplayed;
+      setTimeout(stepTypewriter, 55);
+    } else {
+      setTimeout(() => { twTyping = false; stepTypewriter(); }, 2000);
+    }
+  } else {
+    if (twDisplayed.length > 0) {
+      twDisplayed = twDisplayed.slice(0, -1);
+      el.textContent = twDisplayed;
+      setTimeout(stepTypewriter, 30);
+    } else {
+      twPhraseIdx = (twPhraseIdx + 1) % CYCLING_PHRASES.length;
+      twTyping = true;
+      setTimeout(stepTypewriter, 200);
+    }
+  }
+}
 
 // ── QUESTIONS (vouvoiement) ────────────────────────────────────
 const QUESTIONS_BASE = [
@@ -1019,6 +1112,12 @@ function exporterMaps() {
   const encoded = lieux.map(l => encodeURIComponent(l + ', ' + ville)).join('/');
   window.open('https://www.google.com/maps/dir/' + encoded, '_blank');
 }
+
+// ── Init ──────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  initSlideshow();
+  stepTypewriter();
+});
 
 // ── City card hover effect ─────────────────────────────────────
 document.querySelectorAll('.city-card').forEach(card => {

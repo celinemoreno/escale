@@ -1,6 +1,28 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+
+const PHOTOS = [
+  { url: 'https://images.pexels.com/photos/30732709/pexels-photo-30732709.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Bordeaux · Pexels' },
+  { url: 'https://images.pexels.com/photos/15433187/pexels-photo-15433187.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Biarritz · Pexels' },
+  { url: 'https://images.pexels.com/photos/2661942/pexels-photo-2661942.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',    credit: 'La Rochelle · Pexels' },
+  { url: 'https://images.pexels.com/photos/14466528/pexels-photo-14466528.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Rocamadour · Pexels' },
+  { url: 'https://images.pexels.com/photos/14285453/pexels-photo-14285453.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Dordogne · Pexels' },
+  { url: 'https://images.pexels.com/photos/31707246/pexels-photo-31707246.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Marais Poitevin · Pexels' },
+  { url: 'https://images.pexels.com/photos/30840855/pexels-photo-30840855.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Dune du Pilat · Pexels' },
+  { url: 'https://images.pexels.com/photos/14284405/pexels-photo-14284405.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Lot-et-Garonne · Pexels' },
+  { url: 'https://images.pexels.com/photos/12018969/pexels-photo-12018969.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Charente · Pexels' },
+  { url: 'https://images.pexels.com/photos/19189209/pexels-photo-19189209.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Nouvelle-Aquitaine · Pexels' },
+  { url: 'https://images.pexels.com/photos/33343359/pexels-photo-33343359.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Nouvelle-Aquitaine · Pexels' },
+  { url: 'https://images.pexels.com/photos/19047688/pexels-photo-19047688.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop',  credit: 'Poitiers · Pexels' },
+];
+
+const CYCLING_PHRASES = [
+  'votre week-end en amoureux',
+  'vos vacances en famille',
+  'votre virée improvisée entre amis',
+];
 
 const ETAPES = [
   {
@@ -26,10 +48,41 @@ const ETAPES = [
   },
 ];
 
-const TICKER = 'Nouvelle-Aquitaine · Bordeaux · Biarritz · Sarlat-la-Canéda · La Rochelle · Angoulême · Limoges · Dax · Niort · Poitiers · Agen · Aubusson · Brive-la-Gaillarde · ';
+const TICKER = '— Préparez votre escapade parmi 12 villes de France ';
 
 export default function LandingPage() {
   const router = useRouter();
+
+  // ── Slideshow ──
+  const [currentPhoto, setCurrentPhoto] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setCurrentPhoto(p => (p + 1) % PHOTOS.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  // ── Typewriter ──
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayed, setDisplayed] = useState('');
+  const [typing, setTyping] = useState(true);
+
+  useEffect(() => {
+    const phrase = CYCLING_PHRASES[phraseIndex];
+    if (typing) {
+      if (displayed.length < phrase.length) {
+        const t = setTimeout(() => setDisplayed(phrase.slice(0, displayed.length + 1)), 55);
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => setTyping(false), 2000);
+      return () => clearTimeout(t);
+    } else {
+      if (displayed.length > 0) {
+        const t = setTimeout(() => setDisplayed(d => d.slice(0, -1)), 30);
+        return () => clearTimeout(t);
+      }
+      setPhraseIndex(i => (i + 1) % CYCLING_PHRASES.length);
+      setTyping(true);
+    }
+  }, [displayed, typing, phraseIndex]);
 
   return (
     <div className="min-h-screen bg-cremeivoire font-body">
@@ -53,43 +106,52 @@ export default function LandingPage() {
           className="grain relative w-full overflow-hidden rounded-4xl sm:rounded-5xl"
           style={{ height: 'clamp(480px, 78vh, 820px)' }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://images.pexels.com/photos/14466528/pexels-photo-14466528.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200&fit=crop"
-            alt="Village de Rocamadour"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: 'blur(1px) brightness(0.82)' }}
-          />
-          <div
-            className="absolute inset-0 z-[1]"
-            style={{ background: 'linear-gradient(to top, rgba(15,65,74,0.88) 0%, rgba(15,65,74,0.2) 55%, transparent 100%)' }}
-          />
+          {/* Slideshow photos */}
+          {PHOTOS.map((photo, idx) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={photo.url}
+              src={photo.url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+              style={{ opacity: idx === currentPhoto ? 1 : 0 }}
+            />
+          ))}
 
-          <div className="relative z-[2] h-full flex flex-col justify-between p-7 sm:p-12">
+          {/* Overlay crème légère */}
+          <div className="absolute inset-0 z-[1]" style={{ background: 'rgba(239,232,223,0.42)' }} />
 
-            {/* Badge */}
-            <div
-              className="self-start inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium"
-              style={{ background: 'rgba(216,186,152,0.18)', border: '1px solid rgba(216,186,152,0.35)', color: '#d8ba98' }}
+          {/* Crédit photo — bas droite */}
+          <div className="absolute bottom-4 right-5 z-[3]">
+            <span
+              className="text-[10px] font-body px-2 py-0.5 rounded-full"
+              style={{ background: 'rgba(15,65,74,0.35)', color: '#efe8df' }}
             >
-              <span>🌿</span>
-              <span>12 destinations · Nouvelle-Aquitaine</span>
-            </div>
+              {PHOTOS[currentPhoto].credit}
+            </span>
+          </div>
 
-            {/* Bas du hero */}
+          {/* Contenu */}
+          <div className="relative z-[2] h-full flex flex-col justify-end p-7 sm:p-12">
             <div className="max-w-2xl">
-              <h1 className="font-display font-black text-cremeivoire text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-4">
+              <h1 className="font-display font-black text-rougebordeaux text-4xl sm:text-5xl lg:text-6xl leading-[1.05] mb-5">
                 La plus belle destination du monde est à 2h de chez vous.
               </h1>
-              <p className="text-cremeivoire/70 text-base sm:text-lg mb-8 leading-relaxed font-body max-w-lg">
-                On cure le meilleur de la Nouvelle-Aquitaine selon votre profil. Comme un ami bien renseigné, en 2 minutes.
+
+              {/* Sous-titre avec typewriter */}
+              <p className="text-base sm:text-lg mb-8 leading-relaxed font-body max-w-lg" style={{ color: 'rgba(127,3,3,0.8)' }}>
+                Créez votre itinéraire idéal selon vos envies pour{' '}
+                <span className="font-semibold">
+                  {displayed}
+                  <span className="cursor-blink inline-block w-[2px] h-[0.9em] bg-rougebordeaux ml-0.5 align-middle" />
+                </span>
               </p>
 
-              {/* 2 CTAs côte à côte */}
+              {/* 2 CTAs */}
               <div className="flex flex-col sm:flex-row gap-3 max-w-xl">
                 <button
                   onClick={() => router.push('/decouverte')}
-                  className="flex-1 px-6 py-3.5 rounded-full bg-beigesable text-bleuinuit text-sm font-semibold hover:brightness-105 active:scale-95 transition-all text-center"
+                  className="flex-1 px-6 py-3.5 rounded-full bg-bleuinuit text-beigesable text-sm font-semibold hover:brightness-110 active:scale-95 transition-all text-center"
                 >
                   Je sais où je vais →
                 </button>
@@ -97,7 +159,7 @@ export default function LandingPage() {
                   disabled
                   title="Bientôt disponible"
                   className="flex-1 px-6 py-3.5 rounded-full text-sm font-medium cursor-not-allowed text-center flex items-center justify-center gap-2"
-                  style={{ border: '1px solid rgba(239,232,223,0.2)', color: 'rgba(239,232,223,0.35)' }}
+                  style={{ border: '1px solid rgba(15,65,74,0.2)', color: 'rgba(15,65,74,0.3)' }}
                 >
                   <span>Quelle destination me correspondrait ?</span>
                   <span className="text-xs opacity-60 shrink-0">Bientôt</span>
@@ -106,9 +168,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <p className="text-right text-[10px] text-bleuinuit/30 mt-1.5 pr-2">
-          Photo : Rocamadour, Lot · Pexels
-        </p>
       </section>
 
       {/* ── COMMENT ÇA MARCHE ── */}
@@ -139,10 +198,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── TICKER DÉFILANT ── */}
-      <div className="bg-bleuinuit py-4 overflow-hidden">
+      <div className="bg-bleuinuit py-5 overflow-hidden">
         <div className="flex whitespace-nowrap animate-marquee">
-          <span className="text-beigesable font-body text-sm tracking-wide px-6">{TICKER}</span>
-          <span className="text-beigesable font-body text-sm tracking-wide px-6">{TICKER}</span>
+          <span className="font-display text-xl font-bold text-beigesable px-8">{TICKER}</span>
+          <span className="font-display text-xl font-bold text-beigesable px-8">{TICKER}</span>
         </div>
       </div>
 
@@ -150,44 +209,46 @@ export default function LandingPage() {
       <section
         className="px-4 sm:px-8 py-16"
         style={{
-          background: 'repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 18px, #96c0ce 18px, #96c0ce 22px)',
+          background: 'repeating-linear-gradient(-45deg, #efe8df 0px, #efe8df 35px, #96c0ce 35px, #96c0ce 65px)',
         }}
       >
-        <div className="max-w-2xl mx-auto bg-white rounded-4xl shadow-xl p-10 sm:p-14">
-          <div className="text-center mb-10">
-            <span className="font-display text-2xl font-bold text-bleuinuit">Escale</span>
-            <p className="text-bleuinuit/50 text-sm mt-1 font-body">L'ami bien renseigné pour la Nouvelle-Aquitaine</p>
-          </div>
-
-          {/* Newsletter */}
-          <div className="mb-8">
-            <h3 className="font-display font-bold text-lg text-bleuinuit mb-1">Restez dans la boucle</h3>
-            <p className="text-bleuinuit/55 text-sm mb-4 font-body">
-              Nouvelles destinations, tips locaux, coulisses du projet.
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="votre@email.com"
-                className="flex-1 h-11 px-4 rounded-full border border-bleuinuit/20 text-sm text-bleuinuit placeholder:text-bleuinuit/30 focus:outline-none focus:border-bleuinuit/50 font-body"
-              />
-              <button className="h-11 px-5 rounded-full bg-rougebordeaux text-bleuciel text-sm font-semibold hover:brightness-110 active:scale-95 transition-all whitespace-nowrap">
-                S'inscrire
-              </button>
+        <div className="w-full bg-white rounded-2xl shadow-xl p-10 sm:p-14">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="font-display text-2xl font-bold text-bleuinuit">Escale</span>
+              <p className="text-bleuinuit/50 text-sm mt-1 font-body">L'ami bien renseigné pour la Nouvelle-Aquitaine</p>
             </div>
+
+            {/* Newsletter */}
+            <div className="mb-8">
+              <h3 className="font-display font-bold text-lg text-bleuinuit mb-1">Restez dans la boucle</h3>
+              <p className="text-bleuinuit/55 text-sm mb-4 font-body">
+                Nouvelles destinations, tips locaux, coulisses du projet.
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="votre@email.com"
+                  className="flex-1 h-11 px-4 rounded-full border border-bleuinuit/20 text-sm text-bleuinuit placeholder:text-bleuinuit/30 focus:outline-none focus:border-bleuinuit/50 font-body"
+                />
+                <button className="h-11 px-5 rounded-full bg-rougebordeaux text-bleuciel text-sm font-semibold hover:brightness-110 active:scale-95 transition-all whitespace-nowrap">
+                  S'inscrire
+                </button>
+              </div>
+            </div>
+
+            <hr className="border-bleuinuit/10 mb-8" />
+
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-bleuinuit/50 font-body mb-8">
+              <a href="#" className="hover:text-bleuinuit transition-colors">Une suggestion ?</a>
+              <a href="#" className="hover:text-bleuinuit transition-colors">Nous contacter</a>
+              <a href="#" className="hover:text-bleuinuit transition-colors">Mentions légales</a>
+            </div>
+
+            <p className="text-center text-xs text-bleuinuit/30 font-body">
+              © 2026 Escale — fait avec passion par Céline
+            </p>
           </div>
-
-          <hr className="border-bleuinuit/10 mb-8" />
-
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-bleuinuit/50 font-body mb-8">
-            <a href="#" className="hover:text-bleuinuit transition-colors">Une suggestion ?</a>
-            <a href="#" className="hover:text-bleuinuit transition-colors">Nous contacter</a>
-            <a href="#" className="hover:text-bleuinuit transition-colors">Mentions légales</a>
-          </div>
-
-          <p className="text-center text-xs text-bleuinuit/30 font-body">
-            © 2026 Escale — fait avec passion par Céline
-          </p>
         </div>
       </section>
 

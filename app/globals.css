@@ -23,8 +23,14 @@ body {
 
 ::selection { background-color: #96c0ce; color: #efe8df; }
 
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
 @layer utilities {
   .font-display { font-family: var(--font-fraunces); }
+  .cursor-blink { animation: cursorBlink 0.75s step-end infinite; }
 
   /* Effet grain via SVG noise */
   .grain::after {
